@@ -6,12 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class MainActivityFragment extends Fragment {
+public class CartFragment extends Fragment {
 
-    public MainActivityFragment() {
+    public CartFragment() {
     }
 
     View v;
@@ -19,7 +16,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_main_screen, container, false);
+        v = inflater.inflate(R.layout.fragment_cart, container, false);
+
         return v;
     }
+
 }

@@ -28,16 +28,31 @@ public class MainActivity extends AppCompatActivity {
         this.tabLayout = (TabLayout) findViewById(R.id.activity_tablayout);
         this.tabLayout.setupWithViewPager(this.viewPager);
 
+        this.tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
     private void setupViewPager(ViewPager viewPager)
     {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFrag(new MainActivityFragment(), "Red");
-        adapter.addFrag(new MainActivityFragment(), "Blue");
-        adapter.addFrag(new MainActivityFragment(), "Green");
-        adapter.addFrag(new MainActivityFragment(), "Yellow");
+        adapter.addFrag(new MainActivityFragment(), "Main");
+        adapter.addFrag(new CartFragment(), "Cart");
 
         viewPager.setAdapter(adapter);
     }
