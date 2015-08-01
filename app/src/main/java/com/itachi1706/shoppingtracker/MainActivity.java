@@ -1,16 +1,45 @@
 package com.itachi1706.shoppingtracker;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    Toolbar toolbar;
+    ViewPager viewPager;
+    TabLayout tabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+        setSupportActionBar(this.toolbar);
+
+        this.viewPager = (ViewPager) findViewById(R.id.activity_viewpager);
+        setupViewPager(this.viewPager);
+
+        this.tabLayout = (TabLayout) findViewById(R.id.activity_tablayout);
+        this.tabLayout.setupWithViewPager(this.viewPager);
+
+    }
+
+    private void setupViewPager(ViewPager viewPager)
+    {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        adapter.addFrag(new MainActivityFragment(), "Red");
+        adapter.addFrag(new MainActivityFragment(), "Blue");
+        adapter.addFrag(new MainActivityFragment(), "Green");
+        adapter.addFrag(new MainActivityFragment(), "Yellow");
+
+        viewPager.setAdapter(adapter);
     }
 
 
