@@ -32,6 +32,7 @@ public class ListDB extends SQLiteOpenHelper {
     public static final String PRODUCT_NAME = "title";
     public static final String PRODUCT_BARCODE = "barcode";
     public static final String PRODUCT_CATEGORY = "category";
+    public static final String PRODUCT_IMAGE = "image"; //Not Being used
 
     public static final String CATEGORY_KEY = "key";
     public static final String CATEGORY_NAME = "name";
@@ -45,7 +46,8 @@ public class ListDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + TABLE_PRODUCT + "(" + PRODUCT_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + PRODUCT_NAME + " TEXT NOT NULL," + PRODUCT_BARCODE + " TEXT," + PRODUCT_CATEGORY + " INTEGER," +
+                + PRODUCT_NAME + " TEXT NOT NULL," + PRODUCT_BARCODE + " TEXT," + PRODUCT_CATEGORY + " INTEGER,"
+                + PRODUCT_IMAGE + " TEXT," +
                 " FOREIGN KEY(" + PRODUCT_CATEGORY + ") REFERENCES " + TABLE_CATEGORY + "(" + CATEGORY_KEY + "));";
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "(" + CATEGORY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CATEGORY_NAME + " TEXT NOT NULL);";
