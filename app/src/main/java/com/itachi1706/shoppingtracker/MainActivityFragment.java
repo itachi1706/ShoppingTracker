@@ -1,23 +1,25 @@
 package com.itachi1706.shoppingtracker;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
+import com.itachi1706.shoppingtracker.Database.ListDB;
+import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
+import com.itachi1706.shoppingtracker.Objects.ListCategory;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements OnRefreshListener {
 
     public MainActivityFragment() {
     }
@@ -26,24 +28,52 @@ public class MainActivityFragment extends Fragment {
 
     RecyclerView recyclerView;
 
+    //No Items
+    String[] noItems = {"No Items found. Add some items now!"};
+    StringRecyclerAdapter noItemsadapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main_screen, container, false);
 
-        String[] tmp = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+        //No Items
+        noItemsadapter = new StringRecyclerAdapter(noItems);
 
 
         recyclerView = (RecyclerView) v.findViewById(R.id.rv_items);
+
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        StringRecyclerAdapter adapter = new StringRecyclerAdapter(tmp);
-        recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        checkAndUpdateAdapter();
 
         return v;
+    }
+
+    @Override
+    public void onRefresh() {
+        checkAndUpdateAdapter();
+    }
+
+    private void checkAndUpdateAdapter()
+    {
+        ListDB db = new ListDB(getActivity());
+        if (db.isEmptyItems())
+        {
+            //Null
+            recyclerView.setAdapter(noItemsadapter);
+        } else {
+            //All Items
+            ArrayList<ListCategory> categories = db.getAllCategories();
+            for (ListCategory category : categories)
+            {
+                category.setChildProducts(db.getAllItemsByCategory(category));
+            }
+
+            //TODO Create a custom recyclerView adapter that implements categories
+        }
     }
 }
