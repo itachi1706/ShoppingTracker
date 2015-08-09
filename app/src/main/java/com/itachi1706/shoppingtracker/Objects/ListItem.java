@@ -9,31 +9,31 @@ public class ListItem {
     private int id;
     private String name;
     private String barcode;
-    private ListCategory category;
+    private int category;
 
     public ListItem() {
     }
 
-    public ListItem(int id, String name, String barcode, ListCategory category) {
+    public ListItem(int id, String name, String barcode, int category) {
         this.id = id;
         this.name = name;
         this.barcode = barcode;
         this.category = category;
     }
 
-    public ListItem(int id, String name, ListCategory category) {
+    public ListItem(int id, String name, int category) {
         this.id = id;
         this.name = name;
         this.category = category;
     }
 
-    public ListItem(String name, String barcode, ListCategory category) {
+    public ListItem(String name, String barcode, int category) {
         this.name = name;
         this.barcode = barcode;
         this.category = category;
     }
 
-    public ListItem(String name, ListCategory category) {
+    public ListItem(String name, int category) {
         this.name = name;
         this.category = category;
     }
@@ -73,11 +73,11 @@ public class ListItem {
         this.barcode = barcode;
     }
 
-    public ListCategory getCategory() {
+    public int getCategory() {
         return category;
     }
 
-    public void setCategory(ListCategory category) {
+    public void setCategory(int category) {
         this.category = category;
     }
 }

@@ -69,6 +69,25 @@ public class ListDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+
+    /*
+    Add Category - D
+    Add Item - D
+    Edit Category - D
+    Edit Item - D
+    Remove Category - D
+    Remove Item - D
+    Check if Exists Category - D
+    Check if Exists Item - D
+    Get All Categories - D
+    Get All Products - D
+    Get All Products from Category ID - D
+    Get Product From ID - D
+    Get Category from ID - D
+     */
+
+
+
     private long addCategory(ListCategory cat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -94,6 +113,13 @@ public class ListDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteCategory(ListCategory cat)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_CATEGORY, CATEGORY_KEY + "=" + cat.getId(), null);
+    }
+
     public boolean checkCategoryExists(ListCategory cat)
     {
         String category = cat.getName();
@@ -109,7 +135,7 @@ public class ListDB extends SQLiteOpenHelper {
     /**
      * If record isn't present in DB, add it
      * @param category Category to check
-     * @return Category generated ID or -1 if exists
+     * @return Category generated ID
      */
     public long addCategoryToDB(ListCategory category)
     {
@@ -124,7 +150,7 @@ public class ListDB extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(PRODUCT_NAME, item.getName());
         cv.put(PRODUCT_BARCODE, item.getBarcode());
-        cv.put(PRODUCT_CATEGORY, item.getCategory().getId());
+        cv.put(PRODUCT_CATEGORY, item.getCategory());
 
         long value = db.insert(TABLE_PRODUCT, null, cv);
         db.close();
@@ -139,11 +165,18 @@ public class ListDB extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(PRODUCT_NAME, item.getName());
         cv.put(PRODUCT_BARCODE, item.getBarcode());
-        cv.put(PRODUCT_CATEGORY, item.getCategory().getId());
+        cv.put(PRODUCT_CATEGORY, item.getCategory());
         cv.put(PRODUCT_KEY, item.getId());
 
         db.replace(TABLE_PRODUCT, null, cv);
         db.close();
+    }
+
+    public void deleteProduct(ListItem item)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_PRODUCT, PRODUCT_KEY + "=" + item.getId(), null);
     }
 
     public boolean checkProductExists(ListItem cat)
@@ -161,7 +194,7 @@ public class ListDB extends SQLiteOpenHelper {
     /**
      * If record isn't present in DB, add it
      * @param product Product to check
-     * @return Product generated ID or -1 if exists
+     * @return Product generated ID
      */
     public long addProductToDB(ListItem product)
     {
@@ -194,8 +227,7 @@ public class ListDB extends SQLiteOpenHelper {
         item.setName(cursor.getString(1));
         item.setBarcode(cursor.getString(2));
 
-        ListCategory category = getCategoryFromId(cursor.getInt(3));
-        item.setCategory(category);
+        item.setCategory(cursor.getInt(3));
         return item;
     }
 
@@ -230,25 +262,25 @@ public class ListDB extends SQLiteOpenHelper {
      * @param id id of item
      * @return item object
      */
-    public ListCategory getItemFromId(int id)
+    public ListItem getItemFromId(int id)
     {
         String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_KEY + "=" + id + ";";
         SQLiteDatabase db = this.getReadableDatabase();
-        ListCategory category = new ListCategory();
+        ListItem item = new ListItem();
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst())
         {
             do
             {
-                category = generateCategoryFromCursor(cursor);
+                item = generateItemFromCursor(cursor);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
 
-        return category;
+        return item;
     }
 
     public boolean isEmptyItems()
@@ -305,7 +337,7 @@ public class ListDB extends SQLiteOpenHelper {
      * @param name name of product
      * @return list of products with the same name
      */
-    public ArrayList<ListItem> getAllItemsByName(String name)
+    public ArrayList<ListItem> getAllProducts(String name)
     {
         String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_NAME + "=" + name + ";";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -317,6 +349,58 @@ public class ListDB extends SQLiteOpenHelper {
             do
             {
                 ListItem prod = generateItemFromCursor(cursor);
+                results.add(prod);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return results;
+    }
+
+    /**
+     * Get All Products
+     * @return list of products with the same name
+     */
+    public ArrayList<ListItem> getAllItemsByName()
+    {
+        String query = "SELECT * FROM " + TABLE_PRODUCT + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<ListItem> results = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                ListItem prod = generateItemFromCursor(cursor);
+                results.add(prod);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return results;
+    }
+
+    /**
+     * Get All Categories
+     * @return list of products with the same name
+     */
+    public ArrayList<ListCategory> getAllCategories()
+    {
+        String query = "SELECT * FROM " + TABLE_CATEGORY + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<ListCategory> results = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                ListCategory prod = generateCategoryFromCursor(cursor);
                 results.add(prod);
             } while (cursor.moveToNext());
         }
