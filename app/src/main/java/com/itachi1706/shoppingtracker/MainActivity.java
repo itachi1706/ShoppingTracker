@@ -1,18 +1,25 @@
 package com.itachi1706.shoppingtracker;
 
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ViewPager viewPager;
     TabLayout tabLayout;
+    FloatingActionButton fab;
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        this.fab = (FloatingActionButton) findViewById(R.id.activity_fab);
+        this.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickFAB();
+            }
+        });
+
+        this.coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_coordinator_layout);
+
+    }
+
+    private void clickFAB()
+    {
+        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+        Fragment currentFrag = adapter.getItem(viewPager.getCurrentItem());
+        if (currentFrag instanceof MainActivityFragment)
+        {
+            //Main Fragment
+            Snackbar.make(coordinatorLayout, "Main Fragment", Snackbar.LENGTH_SHORT)
+                    .setAction("DISMISS", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    })
+                    .show();
+        } else if (currentFrag instanceof CartFragment)
+        {
+            //Cart Fragment
+            Snackbar.make(coordinatorLayout, "Cart Fragment", Snackbar.LENGTH_SHORT)
+                    .setAction("DISMISS", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void setupViewPager(ViewPager viewPager)

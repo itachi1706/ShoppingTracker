@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_coordinator_layout" >
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -35,5 +36,18 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/activity_viewpager" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_fab"
+        android:src="@drawable/plus_black_48"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_gravity="end|bottom"
+        app:elevation="@dimen/fab_elevation"
+        app:borderWidth="0dp"
+        android:adjustViewBounds="false" />
 
 </android.support.design.widget.CoordinatorLayout>
