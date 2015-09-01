@@ -46,7 +46,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_gravity="end|bottom"
-        app:elevation="@dimen/fab_elevation"
+        app:elevation="@dimen/design_fab_elevation"
         app:borderWidth="0dp"
         android:adjustViewBounds="false" />
 
