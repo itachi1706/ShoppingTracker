@@ -7,7 +7,7 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=23.0.0
     - API_LEVEL=23
     - ANDROID_EMULATOR_API_LEVEL=22
-  android:
+android:
     components:
         # Uncomment the lines below if you want to
         # use the latest revision of Android SDK Tools
@@ -36,7 +36,7 @@ env:
         # - sys-img-armeabi-v7a-android-$ANDROID_BUILD_TOOLS_VERSION
         - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_EMULATOR_API_LEVEL
 
-  before_install:
+before_install:
     - chmod +x gradlew
     # Create and start emulator
     - echo no | android create avd --force -n test -t "Google Inc.:Google APIs:"$ANDROID_EMULATOR_API_LEVEL --abi $ANDROID_ABI
