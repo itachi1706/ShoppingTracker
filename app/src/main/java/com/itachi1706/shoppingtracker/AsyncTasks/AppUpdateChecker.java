@@ -14,6 +14,8 @@ import android.text.Html;
 import android.util.Log;
 
 import com.itachi1706.shoppingtracker.R;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
+import com.itachi1706.shoppingtracker.utility.StaticReferences;
 import com.itachi1706.shoppingtracker.utility.ToastHelper;
 
 import java.io.BufferedReader;
@@ -30,8 +32,6 @@ import java.util.Random;
  * for ShoppingTracker in package com.itachi1706.shoppingtracker.AsyncTasks
  */
 public class AppUpdateChecker extends AsyncTask<Void, Void, String> {
-
-    //TODO: Figure out why sdcard ain't working for emulator :(
 
     Activity mActivity;
     Exception except = null;
@@ -58,9 +58,8 @@ public class AppUpdateChecker extends AsyncTask<Void, Void, String> {
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            //TODO: Set Timeout value in a static variables class
-            //conn.setConnectTimeout(MainStaticVars.HTTP_QUERY_TIMEOUT);
-            //conn.setReadTimeout(MainStaticVars.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticReferences.HTTP_TIMEOUT);
+            conn.setReadTimeout(StaticReferences.HTTP_TIMEOUT);
             InputStream in = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -113,9 +112,7 @@ public class AppUpdateChecker extends AsyncTask<Void, Void, String> {
         if (hasUpdate){
             Log.d("UPDATE NEEDED", "An Update is needed");
             //Outdated Version. Prompt Update
-            //TODO: Generate changelogs with the static variables class
-            //String bodyMsg = MainStaticVars.getChangelogStringFromArrayList(changelogStrings);
-            String bodyMsg = ""; //TODO: Remove when changelog generated. This is shell message
+            String bodyMsg = StaticMethods.getChangelogFromArrayList(changelogStrings);
             String title = "A New Update is Available!";
             if (!mActivity.isFinishing()) {
                 new AlertDialog.Builder(mActivity).setTitle(title).setMessage(Html.fromHtml(bodyMsg))
