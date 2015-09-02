@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Database.ListDB;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
+import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.util.ArrayList;
 
@@ -55,21 +57,19 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
 
     @Override
     public void onRefresh() {
+        Log.d(StaticReferences.TAG, "Main Fragment triggered");
         checkAndUpdateAdapter();
     }
 
-    private void checkAndUpdateAdapter()
-    {
+    private void checkAndUpdateAdapter() {
         ListDB db = new ListDB(getActivity());
-        if (db.isEmptyItems())
-        {
+        if (db.isEmptyItems()) {
             //Null
             recyclerView.setAdapter(noItemsadapter);
         } else {
             //All Items
             ArrayList<ListCategory> categories = db.getAllCategories();
-            for (ListCategory category : categories)
-            {
+            for (ListCategory category : categories) {
                 category.setChildProducts(db.getAllItemsByCategory(category));
             }
 

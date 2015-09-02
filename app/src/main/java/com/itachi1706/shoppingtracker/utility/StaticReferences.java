@@ -7,4 +7,5 @@ package com.itachi1706.shoppingtracker.utility;
 public class StaticReferences {
 
     public static final int HTTP_TIMEOUT = 15000; //15 seconds
+    public static final String TAG = "ShoppingTracker";
 }

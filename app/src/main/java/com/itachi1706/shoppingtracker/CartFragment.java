@@ -1,16 +1,18 @@
 package com.itachi1706.shoppingtracker;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
+import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 public class CartFragment extends Fragment implements OnRefreshListener {
 
@@ -47,6 +49,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
 
     @Override
     public void onRefresh() {
+        Log.d(StaticReferences.TAG, "Cart Fragment triggered");
         checkAndUpdateAdapter();
     }
 
