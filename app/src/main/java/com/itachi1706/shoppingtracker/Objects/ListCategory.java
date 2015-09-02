@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Kenneth on 1/8/2015
  * for Shopping Tracker in package com.itachi1706.shoppingtracker.Objects
  */
-public class ListCategory {
+public class ListCategory extends ListBase {
 
     private int id;
     private String name;
@@ -14,18 +14,20 @@ public class ListCategory {
     private List<ListItem> childProducts;
 
     public ListCategory() {
+        super();
     }
 
     public ListCategory(int id, String name)
     {
+        super();
         this.id = id;
         this.name = name;
     }
 
     public ListCategory(String name)
     {
+        super();
         this.name = name;
-
     }
 
     public int getId() {

@@ -1,7 +1,9 @@
 package com.itachi1706.shoppingtracker;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +52,8 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh() {
         Log.d(StaticReferences.TAG, "Cart Fragment triggered");
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.barcode_48));
         checkAndUpdateAdapter();
     }
 

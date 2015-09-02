@@ -4,17 +4,20 @@ package com.itachi1706.shoppingtracker.Objects;
  * Created by Kenneth on 1/8/2015
  * for Shopping Tracker in package com.itachi1706.shoppingtracker.Objects
  */
-public class ListItem {
+public class ListItem extends ListBase {
 
     private int id;
     private String name;
     private String barcode;
     private int category;
+    //private Drawable image;   //Soon(tm)
 
     public ListItem() {
+        super(true);
     }
 
     public ListItem(int id, String name, String barcode, int category) {
+        super(true);
         this.id = id;
         this.name = name;
         this.barcode = barcode;
