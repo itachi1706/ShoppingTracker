@@ -53,7 +53,7 @@ public class AppUpdateChecker extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        String url = ""; //TODO: Create a Update URL for this
+        String url = "http://android.itachi1706.com/android/updates/shoptrack.html";
         String tmp = "";
         try {
             URL urlConn = new URL(url);

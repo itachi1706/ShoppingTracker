@@ -1,6 +1,7 @@
 package com.itachi1706.shoppingtracker;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         this.coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_coordinator_layout);
+
+        //Async Tasks here
+        new AppUpdateChecker(this, PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()), true).execute();
 
     }
 
