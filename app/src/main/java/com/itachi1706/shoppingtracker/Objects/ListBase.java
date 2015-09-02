@@ -7,6 +7,7 @@ package com.itachi1706.shoppingtracker.Objects;
 public class ListBase {
 
     private boolean isChild = false;
+    private boolean isExpanded = false;
 
     public ListBase(){}
 
@@ -20,5 +21,13 @@ public class ListBase {
 
     public void setIsChild(boolean isChild) {
         this.isChild = isChild;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setIsExpanded(boolean isExpanded) {
+        this.isExpanded = isExpanded;
     }
 }

@@ -1,6 +1,5 @@
 package com.itachi1706.shoppingtracker.Adapters;
 
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.R;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,8 +46,10 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (baseItem instanceof ListCategory){
             //Category Binding
             ListCategory cat = (ListCategory) baseItem;
+            int childItems = 0;
+            if (cat.hasChild()) childItems = cat.getChildProducts().size();
             CategoryViewHolder categoryViewHolder = (CategoryViewHolder) holder;
-            categoryViewHolder.category.setText(cat.getName());
+            categoryViewHolder.category.setText(cat.getName() + " (" + childItems + ")");
         } else if (baseItem instanceof ListItem){
             //Item Binding
             ListItem item = (ListItem) baseItem;
@@ -81,6 +83,58 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         return null;
     }
 
+    private int getCategoryID(ListCategory category){
+        int toAddTo = -1;
+        for (int i = 0; i < items.size(); i++){
+            if (!(items.get(i) instanceof ListCategory)) continue;
+            if (items.get(i) == category){
+                toAddTo = i;
+            }
+        }
+        return toAddTo;
+    }
+
+    public void addChild(ListCategory category){
+        List<ListItem> childItems = category.getChildProducts();
+
+        int toAddTo = getCategoryID(category);
+        if (toAddTo == -1) return;
+
+        items.get(toAddTo).setIsExpanded(true);
+
+        for (ListItem item : childItems){
+            items.add(toAddTo + 1, item);
+            notifyItemInserted(toAddTo + 1);
+        }
+    }
+
+    public void removeChild(ListCategory category){
+        List<ListItem> childItems = category.getChildProducts();
+        int toAddTo = getCategoryID(category);
+        if (toAddTo == -1) return;
+
+        items.get(toAddTo).setIsExpanded(false);
+
+        for (Iterator<ListBase> iterator = items.iterator(); iterator.hasNext();){
+            ListBase baseItem = iterator.next();
+            if (baseItem instanceof ListCategory) continue;
+
+            ListItem item = (ListItem) baseItem;
+            boolean toRemove = false;
+            for (ListItem childItem : childItems){
+                if (childItem == item){
+                    toRemove = true;
+                    break;
+                }
+            }
+
+            if (toRemove){
+                iterator.remove();
+                notifyItemRemoved(toAddTo + 1);
+            }
+        }
+    }
+
     public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         protected TextView category;
@@ -93,8 +147,19 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         @Override
         public void onClick(View v) {
-            Snackbar.make(v, "Category: " + category.getText(), Snackbar.LENGTH_SHORT).show();
-            Log.d(StaticReferences.TAG, "Category: " + category.getText());
+            int position = this.getLayoutPosition();
+            ListBase item = items.get(position);
+
+            Log.d(StaticReferences.TAG, "Category: " + category.getText() + " isExpanded: " + item.isExpanded());
+
+            if (item.isExpanded()){
+                removeChild((ListCategory) item);
+            } else {
+                ListCategory itemCat = (ListCategory) item;
+                if (itemCat.hasChild()){
+                    addChild(itemCat);
+                }
+            }
         }
     }
 
@@ -112,8 +177,12 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         @Override
         public void onClick(View v) {
-            Snackbar.make(v, "Item: " + itemName.getText() + " barcode: " + itemBarcode.getText(), Snackbar.LENGTH_SHORT).show();
-            Log.d(StaticReferences.TAG, "Item: " + itemName.getText() + " barcode: " + itemBarcode.getText());
+            int position = this.getLayoutPosition();
+            ListBase item = items.get(position);
+
+            Log.d(StaticReferences.TAG, "Item: " + itemName.getText() + " barcode: " + itemBarcode.getText() + " Category ID: " + ((ListItem)item).getCategory());
+
+
         }
     }
 }

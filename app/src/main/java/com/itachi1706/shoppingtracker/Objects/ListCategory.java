@@ -53,4 +53,9 @@ public class ListCategory extends ListBase {
     public void setChildProducts(List<ListItem> childProducts) {
         this.childProducts = childProducts;
     }
+
+    public boolean hasChild() {
+        return this.childProducts != null && this.childProducts.size() != 0;
+
+    }
 }
