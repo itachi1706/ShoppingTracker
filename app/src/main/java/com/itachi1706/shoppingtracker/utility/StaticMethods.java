@@ -1,6 +1,7 @@
 package com.itachi1706.shoppingtracker.utility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Kenneth on 9/2/2015.
@@ -31,5 +32,11 @@ public class StaticMethods {
         }
 
         return changelogStringBuilder.toString();
+    }
+
+    public static String getChangelogFromArray(String[] changelog){
+        ArrayList<String> changelogArrList = new ArrayList<>();
+        Collections.addAll(changelogArrList, changelog);
+        return getChangelogFromArrayList(changelogArrList);
     }
 }

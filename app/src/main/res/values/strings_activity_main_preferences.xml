@@ -1,0 +1,5 @@
+<resources>
+    <string name="title_activity_main_preferences">Settings</string>
+    <string name="pref_header_general">General</string>
+    <string name="update_link">https://github.com/itachi1706/ShoppingTracker/releases</string>
+</resources>
