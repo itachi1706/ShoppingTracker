@@ -84,8 +84,6 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
             for (ListCategory category : categories) {
                 category.setChildProducts(db.getAllItemsByCategory(category));
             }
-
-            //TODO Create a custom recyclerView adapter that implements categories
         }
     }
 

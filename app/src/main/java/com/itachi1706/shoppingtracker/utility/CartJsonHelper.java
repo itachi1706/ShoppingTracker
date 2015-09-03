@@ -1,0 +1,75 @@
+package com.itachi1706.shoppingtracker.utility;
+
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.itachi1706.shoppingtracker.Objects.CartItem;
+import com.itachi1706.shoppingtracker.Objects.JSONCart;
+import com.itachi1706.shoppingtracker.Objects.ListBase;
+import com.itachi1706.shoppingtracker.Objects.ListItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Kenneth on 9/3/2015.
+ * for ShoppingTracker in package com.itachi1706.shoppingtracker.utility
+ */
+public class CartJsonHelper {
+
+    public static void storeJsonCart(SharedPreferences sp, JSONCart[] cartList){
+        Gson gson = new GsonBuilder().create();
+        String jsonString = gson.toJson(cartList, JSONCart.class);
+        sp.edit().putString("cart_json", jsonString).apply();
+    }
+
+    public static JSONCart[] getJsonCart(SharedPreferences sp){
+        String json = sp.getString("cart_json", "blanked");
+        if (json.equals("blanked")){
+            return new JSONCart[0];
+        }
+        Gson gson = new Gson();
+        return gson.fromJson(json, JSONCart[].class);
+
+    }
+
+    public static JSONCart[] convertJsonCartListToArray(List<JSONCart> jsonCartList){
+        return jsonCartList.toArray(new JSONCart[jsonCartList.size()]);
+    }
+
+    public static List<JSONCart> convertCartItemsToJsonCart(List<CartItem> cartItemList){
+        List<JSONCart> jsonCarts = new ArrayList<>();
+        for (CartItem item : cartItemList){
+            jsonCarts.add(new JSONCart(item.getId(), item.getQty(), item.getBasePrice()));
+        }
+        return jsonCarts;
+    }
+
+    public static List<CartItem> convertJsonCartToCartItems(JSONCart[] jsonCarts){
+        List<CartItem> cartItems = new ArrayList<>();
+
+        //TODO: Remove and implement from SQLite DB when test over
+        List<ListItem> listItems = GenerateSampleData.generateAllItemsOnly();
+
+        for (JSONCart cart : jsonCarts){
+            ListItem itemToAdd = findCartItem(cart.getId(), listItems);
+
+            if (itemToAdd == null) continue;
+
+            cartItems.add(new CartItem(cart.getId(), cart.getQty(), cart.getBasePrice(), itemToAdd));
+        }
+
+        return cartItems;
+    }
+
+    private static ListItem findCartItem(int id, List<ListItem> listItems){
+        for (ListItem item : listItems){
+            if (item.getId() == id){
+                return item;
+            }
+        }
+        return null;
+    }
+
+}

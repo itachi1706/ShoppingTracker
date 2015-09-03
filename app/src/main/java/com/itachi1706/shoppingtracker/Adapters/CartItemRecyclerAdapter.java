@@ -58,6 +58,27 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
         return new CartViewHolder(itemView);
     }
 
+    public void addItem(CartItem item){
+        int pos = cartList.size();
+        cartList.add(item);
+        notifyItemInserted(pos);
+    }
+
+    public void removeItem(CartItem item){
+        int pos = -1;
+        for (int i = 0; i < cartList.size(); i++){
+            if (cartList.get(i) == item){
+                pos = i;
+                break;
+            }
+        }
+
+        if (pos == -1) return;
+
+        cartList.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
 
     public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -78,6 +99,7 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
 
         @Override
         public void onClick(View v) {
+            //TODO: Implement edit and remove for cart items
             Toast.makeText(v.getContext(), title.getText(), Toast.LENGTH_SHORT).show();
         }
 

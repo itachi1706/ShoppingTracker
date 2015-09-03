@@ -46,4 +46,20 @@ public class GenerateSampleData {
         list.add(new ListItem(10, "Potato Salad with 5", "91111117"));
         return list;
     }
+
+    public static List<ListItem> generateAllItemsOnly(){
+        List<ListItem> list = new ArrayList<>();
+        list.add(new ListItem(0, "Potato Salad"));
+        list.add(new ListItem(1, "Potato Salad with Barcode", "91111111"));
+        list.add(new ListItem(2, "Banana", 1));
+        list.add(new ListItem(3, "Banana with Salad", "911", 1));
+        list.add(new ListItem(4, "Potato Salad with 1", "91111113"));
+        list.add(new ListItem(5, "Grapes", 2));
+        list.add(new ListItem(6, "Grapes with French Fry", "111", 2));
+        list.add(new ListItem(7, "Potato Salad with 2", "91111114"));
+        list.add(new ListItem(8, "Potato Salad with 3", "91111115"));
+        list.add(new ListItem(9, "Potato Salad with 4", "91111116"));
+        list.add(new ListItem(10, "Potato Salad with 5", "91111117"));
+        return list;
+    }
 }
