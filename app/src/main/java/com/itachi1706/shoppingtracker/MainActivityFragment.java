@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +39,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     SharedPreferences sp;
 
     RecyclerView recyclerView;
+    CardView alwaysHideThisView;    //TODO: Make this card view look nicer lol. Black is ugly :P
 
     //No Items
     String[] noItems = {"No Items found. Add some items now!"};
@@ -56,6 +58,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         //No Items
         noItemsadapter = new StringRecyclerAdapter(noItems);
 
+        alwaysHideThisView = (CardView) getActivity().findViewById(R.id.card_view);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.rv_items);
 
@@ -64,7 +67,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        checkAndUpdateAdapter();
+        onRefresh();
 
         return v;
     }
@@ -74,6 +77,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         Log.d(StaticReferences.TAG, "Main Fragment triggered");
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_black_48));
+        alwaysHideThisView.setVisibility(View.GONE);
         checkAndUpdateAdapter();
     }
 

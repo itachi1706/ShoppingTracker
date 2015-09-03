@@ -46,7 +46,7 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
         cartViewHolder.quantity.setText("Qty: " + s.getQty());
 
         DecimalFormat df = new DecimalFormat("0.00");
-        cartViewHolder.basePrice.setText(df.format(s.getBasePrice()));
+        cartViewHolder.basePrice.setText("$" + df.format(s.getBasePrice()));
     }
 
     @Override
@@ -62,6 +62,10 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
         int pos = cartList.size();
         cartList.add(item);
         notifyItemInserted(pos);
+    }
+
+    public List<CartItem> getCartItems(){
+        return cartList;
     }
 
     public void removeItem(CartItem item){
