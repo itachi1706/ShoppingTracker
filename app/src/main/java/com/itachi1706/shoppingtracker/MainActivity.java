@@ -1,5 +1,6 @@
 package com.itachi1706.shoppingtracker;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,8 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
+import com.itachi1706.shoppingtracker.FallbackBarcodeScanner.IntentIntegrator;
+import com.itachi1706.shoppingtracker.FallbackBarcodeScanner.IntentResult;
+import com.itachi1706.shoppingtracker.Objects.LegacyBarcode;
 import com.itachi1706.shoppingtracker.VisionAPI.VisionApiBarcodeCameraActivity;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
 
     private static int VISION_REQUEST_CODE = 100;
+    private static boolean isLegacyBarcode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,9 +148,21 @@ public class MainActivity extends AppCompatActivity {
                     .show();
 
             //TODO Check for play services, if no play servics, fall back to Zxing
-            Intent intent = new Intent(this, VisionApiBarcodeCameraActivity.class);
-            startActivityForResult(intent, VISION_REQUEST_CODE);
+            int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this.getApplicationContext());
+            if (code == ConnectionResult.SUCCESS){
+                Intent intent = new Intent(this, VisionApiBarcodeCameraActivity.class);
+                startActivityForResult(intent, VISION_REQUEST_CODE);
+            } else {
+                //Fallback to legacy method
+                fallbackToOldBarcodeHandling();
+            }
         }
+    }
+
+    private void fallbackToOldBarcodeHandling(){
+        isLegacyBarcode = true;
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.initiateScan();
     }
 
     private void setupViewPager(ViewPager viewPager)
@@ -182,15 +201,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        //Check the request
-        if (requestCode == VISION_REQUEST_CODE){
-            //Check if successful
-            if (resultCode == RESULT_OK){
-                //Handle result
-                //TODO Handle barcode
-                Barcode barcode = StaticReferences.barcode;
-                StaticReferences.barcode = null;
-                Log.i(StaticReferences.TAG, "Barcode Found: " + barcode.rawValue);
+        if (!isLegacyBarcode) {
+            //Check the request
+            if (requestCode == VISION_REQUEST_CODE) {
+                //Check if successful
+                if (resultCode == RESULT_OK) {
+                    //Handle result
+                    //TODO Handle barcode
+                    Barcode barcode = StaticReferences.barcode;
+                    StaticReferences.barcode = null;
+                    Log.i(StaticReferences.TAG, "Barcode Found: " + barcode.rawValue);
+                }
+            }
+        } else {
+            Log.d(StaticReferences.TAG, "Parsing Legacy Barcode data");
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null){
+                Log.d(StaticReferences.TAG, "Found valid barcode data");
+
+                LegacyBarcode barcode = new LegacyBarcode(result.getFormatName(), result.getContents());
+                barcode.setToString(result.toString());
+                Log.i(StaticReferences.TAG, "Barcode Found: " + barcode.contents);
+                Log.d(StaticReferences.TAG, "Parse Completed");
             }
         }
     }
