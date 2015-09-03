@@ -1,7 +1,7 @@
 package com.itachi1706.shoppingtracker;
 
-import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
@@ -136,24 +136,18 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         } else if (currentFrag instanceof CartFragment)
         {
-            //Cart Fragment
-            //TODO: Remove test code
-            Snackbar.make(coordinatorLayout, "Cart Fragment", Snackbar.LENGTH_SHORT)
-                    .setAction("DISMISS", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    })
-                    .show();
-
-            //TODO Check for play services, if no play servics, fall back to Zxing
-            int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this.getApplicationContext());
-            if (code == ConnectionResult.SUCCESS){
-                Intent intent = new Intent(this, VisionApiBarcodeCameraActivity.class);
-                startActivityForResult(intent, VISION_REQUEST_CODE);
+            //Cart Fragment (Scan barcode)
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+            if (sp.getBoolean("vision_api_use", true)) {
+                int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this.getApplicationContext());
+                if (code == ConnectionResult.SUCCESS) {
+                    Intent intent = new Intent(this, VisionApiBarcodeCameraActivity.class);
+                    startActivityForResult(intent, VISION_REQUEST_CODE);
+                } else {
+                    //Fallback to legacy method
+                    fallbackToOldBarcodeHandling();
+                }
             } else {
-                //Fallback to legacy method
                 fallbackToOldBarcodeHandling();
             }
         }
@@ -207,9 +201,9 @@ public class MainActivity extends AppCompatActivity {
                 //Check if successful
                 if (resultCode == RESULT_OK) {
                     //Handle result
-                    //TODO Handle barcode
                     Barcode barcode = StaticReferences.barcode;
                     StaticReferences.barcode = null;
+                    handleBarcode(barcode, null, false);
                     Log.i(StaticReferences.TAG, "Barcode Found: " + barcode.rawValue);
                 }
             }
@@ -221,9 +215,21 @@ public class MainActivity extends AppCompatActivity {
 
                 LegacyBarcode barcode = new LegacyBarcode(result.getFormatName(), result.getContents());
                 barcode.setToString(result.toString());
+                handleBarcode(null, barcode, true);
                 Log.i(StaticReferences.TAG, "Barcode Found: " + barcode.contents);
                 Log.d(StaticReferences.TAG, "Parse Completed");
             }
+        }
+    }
+
+    private void handleBarcode(Barcode barcode, LegacyBarcode legacyBarcode, boolean isLegacyBarcode){
+        //TODO Handle barcode
+        if (isLegacyBarcode){
+            //Use Legacy barcode
+            Log.d(StaticReferences.TAG, "Handling Legacy Barcode...");
+        } else {
+            //Use Barcode
+            Log.d(StaticReferences.TAG, "Handling GPS Vision Barcode...");
         }
     }
 
