@@ -1,6 +1,8 @@
 package com.itachi1706.shoppingtracker;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -33,6 +35,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     }
 
     View v;
+    SharedPreferences sp;
 
     RecyclerView recyclerView;
 
@@ -47,6 +50,8 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main_screen, container, false);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
         //No Items
         noItemsadapter = new StringRecyclerAdapter(noItems);
@@ -92,7 +97,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     //TODO: Remove this class after test
     private void checkAndUpdateAdapter(){
         List<ListBase> items = GenerateSampleData.generateItems();
-        adapter = new ItemListRecyclerAdapter(items);
+        adapter = new ItemListRecyclerAdapter(items, sp);
         recyclerView.setAdapter(adapter);
     }
 }

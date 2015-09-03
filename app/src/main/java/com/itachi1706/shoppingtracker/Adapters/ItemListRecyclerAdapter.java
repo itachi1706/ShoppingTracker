@@ -1,16 +1,25 @@
 package com.itachi1706.shoppingtracker.Adapters;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.app.AlertDialog;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.R;
+import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.util.Iterator;
@@ -23,8 +32,12 @@ import java.util.List;
 public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ListBase> items;
+    private SharedPreferences sp;
 
-    public ItemListRecyclerAdapter(List<ListBase> items) {this.items = items;}
+    public ItemListRecyclerAdapter(List<ListBase> items, SharedPreferences sp) {
+        this.items = items;
+        this.sp = sp;
+    }
 
     @Override
     public int getItemCount() {return items.size();}
@@ -178,10 +191,44 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         @Override
         public void onClick(View v) {
             int position = this.getLayoutPosition();
-            ListBase item = items.get(position);
+            final ListBase item = items.get(position);
+            final View finalV = v;
 
-            Log.d(StaticReferences.TAG, "Item: " + itemName.getText() + " barcode: " + itemBarcode.getText() + " Category ID: " + ((ListItem)item).getCategory());
+            Log.d(StaticReferences.TAG, "Item: " + itemName.getText() + " barcode: " + itemBarcode.getText() + " Category ID: " + ((ListItem) item).getCategory());
 
+            //Add item
+            final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle(((ListItem) item).getName());
+            LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.dialog_add_item_to_cart, null);
+
+            final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
+            final EditText price = (EditText) view.findViewById(R.id.dialog_price);
+            builder.setView(view);
+            builder.setPositiveButton("Add to Cart", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String quantity = qty.getText().toString();
+                    String itemPrice = price.getText().toString();
+                    quantity = quantity.trim();
+                    itemPrice = itemPrice.trim();
+                    if (quantity.equals("") || itemPrice.equals("")){
+                        Toast.makeText(finalV.getContext(), "You need to enter a price and quantity", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    final CartItem cartItem = new CartItem(((ListItem) item).getId(), Integer.parseInt(qty.getText().toString()), Double.parseDouble(price.getText().toString()), (ListItem) item);
+                    CartJsonHelper.addCartItemToJsonCart(cartItem, sp);
+                    Snackbar.make(finalV, "Added to Cart", Snackbar.LENGTH_SHORT)
+                            .setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    CartJsonHelper.removeCartItemFromJsonCart(cartItem, sp);
+                                }
+                            }).show();
+                }
+            });
+            builder.setNeutralButton(android.R.string.cancel, null);
+            builder.show();
 
         }
     }

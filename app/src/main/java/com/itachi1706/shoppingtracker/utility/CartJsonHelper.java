@@ -10,6 +10,7 @@ import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class CartJsonHelper {
 
     public static void storeJsonCart(SharedPreferences sp, JSONCart[] cartList){
         Gson gson = new GsonBuilder().create();
-        String jsonString = gson.toJson(cartList, JSONCart.class);
+        String jsonString = gson.toJson(cartList, JSONCart[].class);
         sp.edit().putString("cart_json", jsonString).apply();
     }
 
@@ -31,7 +32,52 @@ public class CartJsonHelper {
         }
         Gson gson = new Gson();
         return gson.fromJson(json, JSONCart[].class);
+    }
 
+    public static void addCartItemToJsonCart(CartItem item, SharedPreferences sp){
+        JSONCart[] items = CartJsonHelper.getJsonCart(sp);
+        List<CartItem> cartItems = new ArrayList<>();
+        if (items.length == 0){
+            //No Items, just add
+            cartItems.add(item);
+            storeJsonCart(sp, convertJsonCartListToArray(convertCartItemsToJsonCart(cartItems)));
+            return;
+        }
+
+        //There's existing items, replace list
+        cartItems = convertJsonCartToCartItems(items);
+        removeExistingItem(cartItems, item);
+        cartItems.add(item);
+        storeJsonCart(sp, convertJsonCartListToArray(convertCartItemsToJsonCart(cartItems)));
+    }
+
+    public static List<CartItem> removeExistingItem(List<CartItem> cartItems, CartItem item){
+        for (Iterator<CartItem> iterator = cartItems.iterator(); iterator.hasNext();){
+            CartItem cartItem = iterator.next();
+            if (cartItem.getId() == item.getId()){
+                iterator.remove();
+            }
+        }
+
+        return cartItems;
+    }
+
+    public static void removeCartItemFromJsonCart(CartItem item, SharedPreferences sp){
+        JSONCart[] items = CartJsonHelper.getJsonCart(sp);
+        List<CartItem> cartItems;
+        if (items.length == 0){
+            //Nothing to remove
+            return;
+        }
+
+        cartItems = convertJsonCartToCartItems(items);
+        for (Iterator<CartItem> iterator = cartItems.iterator(); iterator.hasNext();){
+            CartItem cartItem = iterator.next();
+            if (cartItem.getId() == item.getId()){
+                iterator.remove();
+            }
+        }
+        storeJsonCart(sp, convertJsonCartListToArray(convertCartItemsToJsonCart(cartItems)));
     }
 
     public static JSONCart[] convertJsonCartListToArray(List<JSONCart> jsonCartList){

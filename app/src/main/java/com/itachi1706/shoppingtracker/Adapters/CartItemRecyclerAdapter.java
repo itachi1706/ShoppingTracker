@@ -43,7 +43,7 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
             cartViewHolder.barcode.setText("");
         }
 
-        cartViewHolder.quantity.setText(s.getQty());
+        cartViewHolder.quantity.setText("Qty: " + s.getQty());
 
         DecimalFormat df = new DecimalFormat("0.00");
         cartViewHolder.basePrice.setText(df.format(s.getBasePrice()));
