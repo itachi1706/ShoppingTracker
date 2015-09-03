@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
+import com.itachi1706.shoppingtracker.VisionAPI.VisionApiBarcodeCameraActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentFrag instanceof MainActivityFragment)
         {
             //Main Fragment
+            //TODO: Remove test code
             Snackbar.make(coordinatorLayout, "Main Fragment", Snackbar.LENGTH_SHORT)
                     .setAction("DISMISS", new View.OnClickListener() {
                         @Override
@@ -123,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (currentFrag instanceof CartFragment)
         {
             //Cart Fragment
+            //TODO: Remove test code
             Snackbar.make(coordinatorLayout, "Cart Fragment", Snackbar.LENGTH_SHORT)
                     .setAction("DISMISS", new View.OnClickListener() {
                         @Override
@@ -131,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     })
                     .show();
+
+            //TODO Check for play services, if no play servics, fall back to Zxing
+            Intent intent = new Intent(this, VisionApiBarcodeCameraActivity.class);
+            startActivity(intent);
         }
     }
 

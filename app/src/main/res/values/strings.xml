@@ -5,4 +5,8 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="recyclerview_textview_placeholder">Sample Text</string>
+    <string name="title_activity_barcode_camera">Barcode Camera Activity</string>
+
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">Barcode Detection cannot run because it does not have the camera permission.  Barcode Detection will now exit.</string>
 </resources>
