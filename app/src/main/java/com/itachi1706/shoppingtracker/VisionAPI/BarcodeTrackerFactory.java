@@ -20,10 +20,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 /**
  * Factory for creating a tracker and associated graphic to be associated with a new barcode.  The
@@ -99,6 +101,9 @@ class BarcodeGraphic extends TrackedGraphic<Barcode> {
             return;
         }
 
+        Log.d("Barcode", "Found Barcode: " + barcode.displayValue);
+        StaticReferences.barcode = barcode;
+
         // Draws the bounding box around the barcode.
         RectF rect = new RectF(barcode.getBoundingBox());
         rect.left = translateX(rect.left);
@@ -108,7 +113,7 @@ class BarcodeGraphic extends TrackedGraphic<Barcode> {
         canvas.drawRect(rect, mRectPaint);
 
         // Draws a label at the bottom of the barcode indicate the barcode value that was detected.
-        canvas.drawText(barcode.rawValue, rect.left, rect.bottom, mTextPaint);
+        canvas.drawText(barcode.displayValue, rect.left, rect.bottom, mTextPaint);
     }
 
 }

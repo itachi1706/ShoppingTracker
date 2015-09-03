@@ -11,12 +11,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.vision.barcode.Barcode;
 import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
 import com.itachi1706.shoppingtracker.VisionAPI.VisionApiBarcodeCameraActivity;
+import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.lang.ref.WeakReference;
 
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     FloatingActionButton fab;
     CoordinatorLayout coordinatorLayout;
+
+    private static int VISION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
             //TODO Check for play services, if no play servics, fall back to Zxing
             Intent intent = new Intent(this, VisionApiBarcodeCameraActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, VISION_REQUEST_CODE);
         }
     }
 
@@ -173,6 +178,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        //Check the request
+        if (requestCode == VISION_REQUEST_CODE){
+            //Check if successful
+            if (resultCode == RESULT_OK){
+                //Handle result
+                //TODO Handle barcode
+                Barcode barcode = StaticReferences.barcode;
+                StaticReferences.barcode = null;
+                Log.i(StaticReferences.TAG, "Barcode Found: " + barcode.rawValue);
+            }
+        }
     }
 
 

@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -31,7 +33,6 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
 
     private static final String TAG = "VisionAPI_Barcode";
 
-    private static final int RC_HANDLE_GMS = 9001;
     private static final int RC_HANDLE_CAMERA_PERM = 2; //Perm Request Codes needs to be < 256
 
 
@@ -92,6 +93,7 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
     private void startCameraSource(){
         try {
             mPreview.start(mCameraSource, mGraphicOverlay);
+            new AsyncTaskWaitForBarcode(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (IOException e){
             mCameraSource.release();
             mCameraSource = null;
@@ -150,7 +152,7 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
      * @see #requestPermissions(String[], int)
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
             Log.d(TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
