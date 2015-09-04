@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
+        StaticReferences.APP_CONTEXT = getApplicationContext();
+
         this.toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
         setSupportActionBar(this.toolbar);
 

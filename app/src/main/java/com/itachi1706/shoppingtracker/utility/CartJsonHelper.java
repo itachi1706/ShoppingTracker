@@ -1,9 +1,11 @@
 package com.itachi1706.shoppingtracker.utility;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.itachi1706.shoppingtracker.Database.ListDB;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.JSONCart;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
@@ -94,8 +96,13 @@ public class CartJsonHelper {
     public static List<CartItem> convertJsonCartToCartItems(JSONCart[] jsonCarts){
         List<CartItem> cartItems = new ArrayList<>();
 
-        //TODO: Remove and implement from SQLite DB when test over
         List<ListItem> listItems = GenerateSampleData.generateAllItemsOnly();
+        ListDB db = new ListDB(StaticReferences.APP_CONTEXT);
+        List<ListItem> dbItems = db.getAllItems();
+
+        for (ListItem item : dbItems){
+            listItems.add(item);
+        }
 
         for (JSONCart cart : jsonCarts){
             ListItem itemToAdd = findCartItem(cart.getId(), listItems);
