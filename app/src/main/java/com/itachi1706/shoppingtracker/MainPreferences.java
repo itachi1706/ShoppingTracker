@@ -125,6 +125,13 @@ public class MainPreferences extends AppCompatActivity {
                     return true;
                 }
             });
+
+            findPreference("force_crash").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    throw new RuntimeException("Test Crashing deliberately");
+                }
+            });
         }
     }
 
