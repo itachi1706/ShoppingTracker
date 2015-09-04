@@ -44,7 +44,10 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     SharedPreferences sp;
 
     RecyclerView recyclerView;
-    CardView alwaysHideThisView;    //TODO: Make this card view look nicer lol. Black is ugly :P
+
+    //From Main Activity
+    CardView alwaysHideThisView;
+    FloatingActionButton fab;
 
     //No Items
     String[] noItems = {"No Items found. Add some items now!"};
@@ -64,6 +67,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         noItemsadapter = new StringRecyclerAdapter(noItems);
 
         alwaysHideThisView = (CardView) getActivity().findViewById(R.id.card_view);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.rv_items);
 
@@ -80,7 +84,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     @Override
     public void onRefresh() {
         Log.d(StaticReferences.TAG, "Main Fragment triggered");
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+
         fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_black_48));
         alwaysHideThisView.setVisibility(View.GONE);
         boolean isDebug = sp.getBoolean("debug", false);

@@ -35,8 +35,11 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     View v;
 
     RecyclerView recyclerView;
+
+    //From Activity
     TextView totalPrice;
     CardView showThisView;
+    FloatingActionButton fab;
 
     //Has Items
     CartItemRecyclerAdapter adapter;
@@ -59,6 +62,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
         recyclerView = (RecyclerView) v.findViewById(R.id.rv_carts);
         totalPrice = (TextView) getActivity().findViewById(R.id.activity_total);
         showThisView = (CardView) getActivity().findViewById(R.id.card_view);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
 
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -73,11 +77,11 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh() {
         Log.d(StaticReferences.TAG, "Cart Fragment triggered");
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.barcode_48));
         totalPrice.setVisibility(View.VISIBLE);
         totalPrice.setText("Total: $0.00");
         showThisView.setVisibility(View.VISIBLE);
+
         checkAndUpdateAdapter();
     }
 

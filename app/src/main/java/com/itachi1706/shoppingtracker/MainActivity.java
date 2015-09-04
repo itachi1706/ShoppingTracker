@@ -28,8 +28,9 @@ import com.itachi1706.shoppingtracker.Objects.LegacyBarcode;
 import com.itachi1706.shoppingtracker.VisionAPI.VisionApiBarcodeCameraActivity;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
-import io.fabric.sdk.android.Fabric;
 import java.lang.ref.WeakReference;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
