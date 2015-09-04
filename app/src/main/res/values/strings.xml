@@ -9,4 +9,6 @@
 
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">Barcode Detection cannot run because it does not have the camera permission.  Barcode Detection will now exit.</string>
+    <string name="title_activity_add_item_to_db">Add Item (WIP)</string>
+    <string name="button_label_scan_barcode">Scan Barcode</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.itachi1706.shoppingtracker.utility;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;

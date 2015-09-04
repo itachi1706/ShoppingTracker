@@ -131,15 +131,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentFrag instanceof MainActivityFragment)
         {
             //Main Fragment
-            //TODO: Remove test code
-            Snackbar.make(coordinatorLayout, "Main Fragment", Snackbar.LENGTH_SHORT)
-                    .setAction("DISMISS", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    })
-                    .show();
+            startActivity(new Intent(this, AddItemToDB.class));
         } else if (currentFrag instanceof CartFragment)
         {
             //Cart Fragment (Scan barcode)
