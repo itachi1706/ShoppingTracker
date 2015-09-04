@@ -81,6 +81,9 @@ public class CartFragment extends Fragment implements OnRefreshListener {
         checkAndUpdateAdapter();
     }
 
+    @Override
+    public void cartItemAdded(CartItem cartItem) {}
+
     private void checkAndUpdateAdapter()
     {
         JSONCart[] items = CartJsonHelper.getJsonCart(sp);

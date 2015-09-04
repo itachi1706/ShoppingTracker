@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.app.AlertDialog;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itachi1706.shoppingtracker.MainActivity;
+import com.itachi1706.shoppingtracker.MainActivityFragment;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
@@ -33,10 +36,12 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private List<ListBase> items;
     private SharedPreferences sp;
+    private Fragment fragment;
 
-    public ItemListRecyclerAdapter(List<ListBase> items, SharedPreferences sp) {
+    public ItemListRecyclerAdapter(List<ListBase> items, SharedPreferences sp, Fragment fragment) {
         this.items = items;
         this.sp = sp;
+        this.fragment = fragment;
     }
 
     @Override
@@ -212,19 +217,16 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     String itemPrice = price.getText().toString();
                     quantity = quantity.trim();
                     itemPrice = itemPrice.trim();
-                    if (quantity.equals("") || itemPrice.equals("")){
+                    if (quantity.equals("") || itemPrice.equals("")) {
                         Toast.makeText(finalV.getContext(), "You need to enter a price and quantity", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     final CartItem cartItem = new CartItem(((ListItem) item).getId(), Integer.parseInt(qty.getText().toString()), Double.parseDouble(price.getText().toString()), (ListItem) item);
                     CartJsonHelper.addCartItemToJsonCart(cartItem, sp);
-                    Snackbar.make(finalV, "Added to Cart", Snackbar.LENGTH_SHORT)
-                            .setAction("UNDO", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    CartJsonHelper.removeCartItemFromJsonCart(cartItem, sp);
-                                }
-                            }).show();
+                    if (fragment instanceof MainActivityFragment){
+                        MainActivityFragment f = (MainActivityFragment) fragment;
+                        f.cartItemAdded(cartItem);
+                    }
                 }
             });
             builder.setNeutralButton(android.R.string.cancel, null);

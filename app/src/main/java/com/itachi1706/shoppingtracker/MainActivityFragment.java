@@ -3,7 +3,9 @@ package com.itachi1706.shoppingtracker;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -19,9 +21,11 @@ import com.itachi1706.shoppingtracker.Adapters.ItemListRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Database.ListDB;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
+import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
+import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
 import com.itachi1706.shoppingtracker.utility.GenerateSampleData;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
@@ -86,6 +90,18 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
             checkAndUpdateAdapterDebug();
     }
 
+    @Override
+    public void cartItemAdded(final CartItem cartItem) {
+        CoordinatorLayout layout = (CoordinatorLayout) getActivity().findViewById(R.id.activity_coordinator_layout);
+        Snackbar.make(layout, "Added to Cart", Snackbar.LENGTH_SHORT)
+                .setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CartJsonHelper.removeCartItemFromJsonCart(cartItem, sp);
+                    }
+                }).show();
+    }
+
     private void checkAndUpdateAdapter() {
         ListDB db = new ListDB(getActivity());
         if (db.isEmptyItems()) {
@@ -102,7 +118,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
             }
 
             List<ListBase> baseItems = mergeCatAndItems(categories, items);
-            adapter = new ItemListRecyclerAdapter(baseItems, sp);
+            adapter = new ItemListRecyclerAdapter(baseItems, sp, this);
             recyclerView.setAdapter(adapter);
         }
     }
@@ -123,7 +139,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     //Sample Class for testing
     private void checkAndUpdateAdapterDebug(){
         List<ListBase> items = GenerateSampleData.generateItems();
-        adapter = new ItemListRecyclerAdapter(items, sp);
+        adapter = new ItemListRecyclerAdapter(items, sp, this);
         recyclerView.setAdapter(adapter);
     }
 }
