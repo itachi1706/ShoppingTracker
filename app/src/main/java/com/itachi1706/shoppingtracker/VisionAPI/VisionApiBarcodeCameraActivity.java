@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +33,8 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     BarcodeTrackerFactory barcodeFactory;
 
+    SharedPreferences sp;
+
     private static final String TAG = "VisionAPI_Barcode";
 
     private static final int RC_HANDLE_CAMERA_PERM = 2; //Perm Request Codes needs to be < 256
@@ -43,6 +47,8 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
 
         mPreview = (CameraSourcePreview) findViewById(R.id.barcode_preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.barcode_overlay);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         //Android M requires permission requesting, so executing that :P
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
@@ -93,7 +99,9 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
     private void startCameraSource(){
         try {
             mPreview.start(mCameraSource, mGraphicOverlay);
-            new AsyncTaskWaitForBarcode(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            boolean startAsyncTask = sp.getBoolean("vision_continuous_test", false);
+            if (!startAsyncTask)
+                new AsyncTaskWaitForBarcode(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (IOException e){
             mCameraSource.release();
             mCameraSource = null;
