@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.19.2'
     }
 }
 apply plugin: 'com.android.application'
@@ -23,7 +23,7 @@ android {
         applicationId "com.itachi1706.shoppingtracker"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 40
+        versionCode 44
         versionName "0.1_demo 2"
     }
     buildTypes {
