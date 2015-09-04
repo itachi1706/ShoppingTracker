@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.JSONCart;
-import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 
 import java.util.ArrayList;

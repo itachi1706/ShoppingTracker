@@ -119,6 +119,7 @@ public class ListDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        db.delete(TABLE_PRODUCT, PRODUCT_CATEGORY + "=" + cat.getId(), null);
         db.delete(TABLE_CATEGORY, CATEGORY_KEY + "=" + cat.getId(), null);
     }
 
@@ -362,10 +363,36 @@ public class ListDB extends SQLiteOpenHelper {
     }
 
     /**
-     * Get All Products
-     * @return list of products with the same name
+     * Get All Uncategorized Products
+     * @return list of products
      */
-    public ArrayList<ListItem> getAllItemsByName()
+    public ArrayList<ListItem> getAllUncategorizedItems()
+    {
+        String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_CATEGORY + " IS NULL;";
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<ListItem> results = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                ListItem prod = generateItemFromCursor(cursor);
+                results.add(prod);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return results;
+    }
+
+    /**
+     * Get All Products
+     * @return list of products
+     */
+    public ArrayList<ListItem> getAllItems()
     {
         String query = "SELECT * FROM " + TABLE_PRODUCT + ";";
         SQLiteDatabase db = this.getReadableDatabase();

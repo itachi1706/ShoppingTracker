@@ -21,6 +21,7 @@ import com.itachi1706.shoppingtracker.Database.ListDB;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
 import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
+import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.utility.GenerateSampleData;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
@@ -78,11 +79,14 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_black_48));
         alwaysHideThisView.setVisibility(View.GONE);
-        checkAndUpdateAdapter();
+        boolean isDebug = sp.getBoolean("debug", false);
+        if (!isDebug)
+            checkAndUpdateAdapter();
+        else
+            checkAndUpdateAdapterDebug();
     }
 
-    //TODO: Rename back to checkAndUpdateAdapter() after test
-    private void checkAndUpdateAdapterReal() {
+    private void checkAndUpdateAdapter() {
         ListDB db = new ListDB(getActivity());
         if (db.isEmptyItems()) {
             //Null
@@ -90,16 +94,34 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         } else {
             //All Items
             ArrayList<ListCategory> categories = db.getAllCategories();
+            //Uncatergorized items
+            ArrayList<ListItem> items = db.getAllUncategorizedItems();
+
             for (ListCategory category : categories) {
                 category.setChildProducts(db.getAllItemsByCategory(category));
             }
+
+            List<ListBase> baseItems = mergeCatAndItems(categories, items);
+            adapter = new ItemListRecyclerAdapter(baseItems, sp);
+            recyclerView.setAdapter(adapter);
         }
+    }
+
+    private List<ListBase> mergeCatAndItems(ArrayList<ListCategory> categories, ArrayList<ListItem> items){
+        List<ListBase> result = new ArrayList<>();
+        for (ListCategory category : categories){
+            result.add(category);
+        }
+        for (ListItem item : items){
+            result.add(item);
+        }
+
+        return result;
     }
 
 
     //Sample Class for testing
-    //TODO: Remove this class after test
-    private void checkAndUpdateAdapter(){
+    private void checkAndUpdateAdapterDebug(){
         List<ListBase> items = GenerateSampleData.generateItems();
         adapter = new ItemListRecyclerAdapter(items, sp);
         recyclerView.setAdapter(adapter);
