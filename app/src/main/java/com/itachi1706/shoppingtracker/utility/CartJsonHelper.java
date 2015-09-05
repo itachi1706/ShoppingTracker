@@ -123,4 +123,8 @@ public class CartJsonHelper {
         return null;
     }
 
+    public static void clearCart(SharedPreferences sp){
+        sp.edit().remove("cart_json").apply();
+    }
+
 }

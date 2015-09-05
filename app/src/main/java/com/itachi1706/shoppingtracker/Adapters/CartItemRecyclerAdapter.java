@@ -109,8 +109,6 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
 
         @Override
         public void onClick(View v) {
-            //TODO: Implement edit and remove for cart items
-            Toast.makeText(v.getContext(), title.getText(), Toast.LENGTH_SHORT).show();
             int position = this.getLayoutPosition();
             CartItem item = cartList.get(position);
 
