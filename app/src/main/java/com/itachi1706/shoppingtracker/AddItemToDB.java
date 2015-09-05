@@ -81,15 +81,7 @@ public class AddItemToDB extends AppCompatActivity {
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Remove test code
-                Snackbar.make(coordinatorLayout, "Add item to Database", Snackbar.LENGTH_SHORT)
-                    .setAction("DISMISS", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    })
-                    .show();
+                processAdd();
             }
         });
 
@@ -100,6 +92,7 @@ public class AddItemToDB extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
+        spinnerList.clear();
         ListDB db = new ListDB(this);
         categoryList = db.getAllCategories();
         spinnerList.add("Create New Category...");
@@ -137,6 +130,8 @@ public class AddItemToDB extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     @Override
@@ -160,6 +155,18 @@ public class AddItemToDB extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void processAdd() {
+        //TODO: Remove test code
+        Snackbar.make(coordinatorLayout, "Add item to Database", Snackbar.LENGTH_SHORT)
+                .setAction("DISMISS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .show();
     }
 
     private void startBarcodeScan(){
