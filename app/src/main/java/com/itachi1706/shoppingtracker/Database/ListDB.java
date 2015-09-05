@@ -368,7 +368,7 @@ public class ListDB extends SQLiteOpenHelper {
      */
     public ArrayList<ListItem> getAllUncategorizedItems()
     {
-        String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_CATEGORY + " IS NULL;";
+        String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_CATEGORY + "=0;";
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<ListItem> results = new ArrayList<>();
 

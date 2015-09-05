@@ -9,7 +9,7 @@ public class ListItem extends ListBase {
     private long id;
     private String name;
     private String barcode;
-    private long category;
+    private long category = 0;
     //private Drawable image;   //Soon(tm)
 
     public ListItem() {
