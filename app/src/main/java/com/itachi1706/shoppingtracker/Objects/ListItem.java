@@ -6,17 +6,28 @@ package com.itachi1706.shoppingtracker.Objects;
  */
 public class ListItem extends ListBase {
 
-    private int id;
+    private long id;
     private String name;
     private String barcode;
-    private int category = -1;
+    private long category;
     //private Drawable image;   //Soon(tm)
 
     public ListItem() {
         super(true);
     }
 
-    public ListItem(int id, String name, String barcode, int category) {
+    public ListItem(String name){
+        super(true);
+        this.name = name;
+    }
+
+    public ListItem(String name, String barcode){
+        super(true);
+        this.name = name;
+        this.barcode = barcode;
+    }
+
+    public ListItem(long id, String name, String barcode, long category) {
         super(true);
         this.id = id;
         this.name = name;
@@ -24,44 +35,44 @@ public class ListItem extends ListBase {
         this.category = category;
     }
 
-    public ListItem(int id, String name, int category) {
+    public ListItem(long id, String name, long category) {
         super(true);
         this.id = id;
         this.name = name;
         this.category = category;
     }
 
-    public ListItem(String name, String barcode, int category) {
+    public ListItem(String name, String barcode, long category) {
         super(true);
         this.name = name;
         this.barcode = barcode;
         this.category = category;
     }
 
-    public ListItem(String name, int category) {
+    public ListItem(String name, long category) {
         super(true);
         this.name = name;
         this.category = category;
     }
 
-    public ListItem(int id, String name, String barcode) {
+    public ListItem(long id, String name, String barcode) {
         super(true);
         this.id = id;
         this.name = name;
         this.barcode = barcode;
     }
 
-    public ListItem(int id, String name) {
+    public ListItem(long id, String name) {
         super(true);
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -81,11 +92,11 @@ public class ListItem extends ListBase {
         this.barcode = barcode;
     }
 
-    public int getCategory() {
+    public long getCategory() {
         return category;
     }
 
-    public void setCategory(int category) {
+    public void setCategory(long category) {
         this.category = category;
     }
 }

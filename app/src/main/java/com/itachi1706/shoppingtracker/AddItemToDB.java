@@ -18,7 +18,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -27,11 +29,14 @@ import com.itachi1706.shoppingtracker.FallbackBarcodeScanner.IntentIntegrator;
 import com.itachi1706.shoppingtracker.FallbackBarcodeScanner.IntentResult;
 import com.itachi1706.shoppingtracker.Objects.LegacyBarcode;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
+import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.VisionAPI.VisionApiBarcodeCameraActivity;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 public class AddItemToDB extends AppCompatActivity {
 
@@ -41,6 +46,8 @@ public class AddItemToDB extends AppCompatActivity {
     private boolean newCategoryCreated = false;
     private ListCategory categorySelected = null;
     private List<ListCategory> categoryList;
+
+    private ListDB db;
 
     //App tools
     EditText name, barcode, category;
@@ -76,6 +83,7 @@ public class AddItemToDB extends AppCompatActivity {
         category.setVisibility(View.INVISIBLE);
         nameTil.setErrorEnabled(true);
         categoryTil.setErrorEnabled(true);
+        db = new ListDB(this);
 
         //On Click Listeners
         scanBarcodeBtn.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +108,6 @@ public class AddItemToDB extends AppCompatActivity {
         super.onResume();
 
         spinnerList.clear();
-        ListDB db = new ListDB(this);
         categoryList = db.getAllCategories();
         spinnerList.add("Create New Category...");
         spinnerList.add("Uncategorized");
@@ -120,12 +127,14 @@ public class AddItemToDB extends AppCompatActivity {
                     category.setVisibility(View.VISIBLE);
                     categoryTil.setVisibility(View.VISIBLE);
                     newCategoryCreated = true;
+                    categorySelected = null;
                 } else if (position == 1) {
                     //No category
                     category.setText("");
                     category.setVisibility(View.INVISIBLE);
                     categoryTil.setVisibility(View.INVISIBLE);
                     newCategoryCreated = false;
+                    categorySelected = null;
                 } else {
                     category.setText("");
                     category.setVisibility(View.INVISIBLE);
@@ -201,15 +210,53 @@ public class AddItemToDB extends AppCompatActivity {
 
         //End of Input Validation
 
-        //TODO: Remove test code
-        Snackbar.make(coordinatorLayout, "Add item to Database", Snackbar.LENGTH_SHORT)
-                .setAction("DISMISS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+        String itemName = name.getText().toString();
+        String itemBarcode = null;
+        barcode.setText(barcode.getText().toString().trim());
+        if (!(barcode.getText().toString().equals(""))){
+            itemBarcode = barcode.getText().toString();
+        }
 
-                    }
-                })
-                .show();
+        long categoryID = -1;
+
+        if (newCategoryCreated){
+            //Created a new category, get back cat id
+            String categoryName = category.getText().toString();
+            ListCategory category = new ListCategory(categoryName);
+            categoryID = db.addCategoryToDB(category);
+            Log.i(StaticReferences.TAG, "New Category Created with ID: " + categoryID);
+        }
+
+        //Add Item
+        if (categoryID == -1){
+            //Add item to category if not specified no category
+            if (!newCategoryCreated && categorySelected != null){
+                //Add
+                categoryID = categorySelected.getId();
+            }
+
+        }
+
+        ListItem itemToAdd;
+        if (categoryID == -1){
+            //No category
+            if (itemBarcode != null)
+                itemToAdd = new ListItem(itemName, itemBarcode);
+            else
+                itemToAdd = new ListItem(itemName);
+        } else {
+            //Has Category
+            if (itemBarcode != null)
+                itemToAdd = new ListItem(itemName, itemBarcode, categoryID);
+            else
+                itemToAdd = new ListItem(itemName, categoryID);
+        }
+
+        long itemID = db.addProductToDB(itemToAdd);
+        Log.i(StaticReferences.TAG, "New Item Created with ID: " + itemID);
+
+        Toast.makeText(this, "Item Created", Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     private void startBarcodeScan(){

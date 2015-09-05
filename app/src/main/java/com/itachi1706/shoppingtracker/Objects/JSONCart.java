@@ -6,23 +6,23 @@ package com.itachi1706.shoppingtracker.Objects;
  */
 public class JSONCart {
 
-    private int id;
+    private long id;
     private int qty;
     private double basePrice;
 
     public JSONCart(){}
 
-    public JSONCart(int id, int qty, double basePrice) {
+    public JSONCart(long id, int qty, double basePrice) {
         this.id = id;
         this.qty = qty;
         this.basePrice = basePrice;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

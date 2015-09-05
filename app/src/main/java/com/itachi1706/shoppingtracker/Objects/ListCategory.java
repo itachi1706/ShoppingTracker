@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class ListCategory extends ListBase {
 
-    private int id;
+    private long id;
     private String name;
 
     private List<ListItem> childProducts;
@@ -17,7 +17,7 @@ public class ListCategory extends ListBase {
         super();
     }
 
-    public ListCategory(int id, String name)
+    public ListCategory(long id, String name)
     {
         super();
         this.id = id;
@@ -30,11 +30,11 @@ public class ListCategory extends ListBase {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

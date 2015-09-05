@@ -6,31 +6,31 @@ package com.itachi1706.shoppingtracker.Objects;
  */
 public class CartItem {
 
-    private int id;
+    private long id;
     private int qty;
     private double basePrice;
     private ListItem item;
 
     public CartItem(){}
 
-    public CartItem(int id, int qty, double basePrice) {
+    public CartItem(long id, int qty, double basePrice) {
         this.id = id;
         this.qty = qty;
         this.basePrice = basePrice;
     }
 
-    public CartItem(int id, int qty, double basePrice, ListItem item) {
+    public CartItem(long id, int qty, double basePrice, ListItem item) {
         this.id = id;
         this.qty = qty;
         this.basePrice = basePrice;
         this.item = item;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

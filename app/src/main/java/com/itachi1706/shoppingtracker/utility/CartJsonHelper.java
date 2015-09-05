@@ -114,7 +114,7 @@ public class CartJsonHelper {
         return cartItems;
     }
 
-    private static ListItem findCartItem(int id, List<ListItem> listItems){
+    private static ListItem findCartItem(long id, List<ListItem> listItems){
         for (ListItem item : listItems){
             if (item.getId() == id){
                 return item;
