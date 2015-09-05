@@ -191,7 +191,7 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             final ListCategory categoryItem = (ListCategory) item;
 
-            menu.setHeaderTitle("Menu for " + categoryItem.getName());
+            menu.setHeaderTitle("Actions for " + categoryItem.getName());
             menu.add(0, v.getId(), 0, "Edit Name").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -278,7 +278,7 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             final ListItem listItem = (ListItem) item;
 
-            menu.setHeaderTitle("Menu for " + listItem.getName());
+            menu.setHeaderTitle("Actions for " + listItem.getName());
             menu.add(0, v.getId(), 0, "Edit Item").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
