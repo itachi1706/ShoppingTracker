@@ -1,5 +1,7 @@
 package com.itachi1706.shoppingtracker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.itachi1706.shoppingtracker.Adapters.ItemListRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
@@ -55,6 +58,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
 
     //Has Items Adapter
     ItemListRecyclerAdapter adapter;
+    ListDB db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +80,9 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        db = new ListDB(getActivity());
+
         onRefresh();
 
         return v;
@@ -106,8 +113,74 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
                 }).show();
     }
 
+    @Override
+    public void deleteCategory(final ListCategory category) {
+        new AlertDialog.Builder(getActivity()).setTitle("Are you sure?")
+                .setMessage("Are you sure you want to delete this category? This will not be reversible!" +
+                        " \n(This will also delete any items that are in this category)")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.deleteCategory(category);
+                        onRefresh();
+                        Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "Category deleted", Snackbar.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton(android.R.string.cancel, null).show();
+    }
+
+    @Override
+    public void updateCategory(final ListCategory newCategory) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Rename " + newCategory.getName());
+        builder.setMessage("Edit name for " + newCategory.getName() + " here");
+        final EditText renamer = new EditText(getActivity());
+        renamer.setText(newCategory.getName());
+        builder.setView(renamer);
+        builder.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (renamer.getText().toString().equals("")){
+                    Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "New name cannot be empty", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ListCategory updatedCategory = new ListCategory(newCategory.getId(), renamer.getText().toString());
+                db.updateCategory(updatedCategory);
+                onRefresh();
+                Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "Category Renamed", Snackbar.LENGTH_SHORT)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                db.updateCategory(newCategory);
+                                onRefresh();
+                            }
+                        }).show();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.show();
+    }
+
+    @Override
+    public void deleteItem(final ListItem item) {
+        new AlertDialog.Builder(getActivity()).setTitle("Are you sure?")
+                .setMessage("Are you sure you want to delete this item? This will not be reversible!")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.deleteProduct(item);
+                        onRefresh();
+                        Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "Item deleted", Snackbar.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton(android.R.string.cancel, null).show();
+    }
+
+    @Override
+    public void updateItem(ListItem item) {
+        //TODO: Figure out how I'm gonna update items
+    }
+
     private void checkAndUpdateAdapter() {
-        ListDB db = new ListDB(getActivity());
         if (db.isEmptyItems()) {
             //Null
             recyclerView.setAdapter(noItemsadapter);

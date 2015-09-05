@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -152,7 +154,8 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class CategoryViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnCreateContextMenuListener{
 
         protected TextView category;
 
@@ -160,6 +163,7 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(v);
             category = (TextView) v.findViewById(R.id.category_title);
             v.setOnClickListener(this);
+            v.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -177,6 +181,37 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     addChild(itemCat);
                 }
             }
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            int position = this.getLayoutPosition();
+            ListBase item = items.get(position);
+            if (item instanceof ListItem) return;
+
+            final ListCategory categoryItem = (ListCategory) item;
+
+            menu.setHeaderTitle("Menu for " + categoryItem.getName());
+            menu.add(0, v.getId(), 0, "Edit Name").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (fragment instanceof MainActivityFragment) {
+                        MainActivityFragment f = (MainActivityFragment) fragment;
+                        f.updateCategory(categoryItem);
+                    }
+                    return true;
+                }
+            });
+            menu.add(0, v.getId(), 1, "Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (fragment instanceof MainActivityFragment) {
+                        MainActivityFragment f = (MainActivityFragment) fragment;
+                        f.deleteCategory(categoryItem);
+                    }
+                    return true;
+                }
+            });
         }
     }
 

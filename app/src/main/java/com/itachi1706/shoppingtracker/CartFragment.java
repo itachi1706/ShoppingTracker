@@ -21,6 +21,8 @@ import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.JSONCart;
+import com.itachi1706.shoppingtracker.Objects.ListCategory;
+import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
@@ -87,6 +89,26 @@ public class CartFragment extends Fragment implements OnRefreshListener {
 
     @Override
     public void cartItemAdded(CartItem cartItem) {}
+
+    @Override
+    public void deleteCategory(ListCategory category) {
+
+    }
+
+    @Override
+    public void updateCategory(ListCategory newCategory) {
+
+    }
+
+    @Override
+    public void deleteItem(ListItem item) {
+
+    }
+
+    @Override
+    public void updateItem(ListItem item) {
+
+    }
 
     private void checkAndUpdateAdapter()
     {
