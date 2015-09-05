@@ -2,9 +2,9 @@ package com.itachi1706.shoppingtracker.utility;
 
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
 
 import com.google.android.gms.vision.barcode.Barcode;
+import com.itachi1706.shoppingtracker.Objects.ListItem;
 
 /**
  * Created by Kenneth on 9/2/2015.
@@ -17,4 +17,5 @@ public class StaticReferences {
     public static Context APP_CONTEXT;
 
     public static Barcode barcode = null;
+    public static ListItem updateItemTmp = null;
 }

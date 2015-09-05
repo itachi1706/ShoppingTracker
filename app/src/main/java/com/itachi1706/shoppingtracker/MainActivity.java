@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
+        Log.d(StaticReferences.TAG, "Main Activity receive request code: " + requestCode);
         if (requestCode == ADD_ITEM_REQUEST_CODE){
             if (resultCode == RESULT_OK){
                 ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
@@ -250,6 +251,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(StaticReferences.TAG, "Parse Completed");
             }
         }
+
+        Log.d(StaticReferences.TAG, "Main Activity cannot understand request code, passing to superclass");
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void handleBarcode(Barcode barcode, LegacyBarcode legacyBarcode, boolean isLegacyBarcode){

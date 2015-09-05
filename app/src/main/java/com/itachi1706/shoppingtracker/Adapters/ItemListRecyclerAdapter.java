@@ -215,7 +215,8 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    public class CategoryItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class CategoryItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnCreateContextMenuListener{
 
         protected TextView itemName;
         protected TextView itemBarcode;
@@ -225,6 +226,7 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             itemName = (TextView) v.findViewById(R.id.item_title);
             itemBarcode = (TextView) v.findViewById(R.id.item_barcode);
             v.setOnClickListener(this);
+            v.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -266,6 +268,37 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             builder.setNeutralButton(android.R.string.cancel, null);
             builder.show();
 
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            int position = this.getLayoutPosition();
+            ListBase item = items.get(position);
+            if (item instanceof ListCategory) return;
+
+            final ListItem listItem = (ListItem) item;
+
+            menu.setHeaderTitle("Menu for " + listItem.getName());
+            menu.add(0, v.getId(), 0, "Edit Item").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (fragment instanceof MainActivityFragment) {
+                        MainActivityFragment f = (MainActivityFragment) fragment;
+                        f.updateItem(listItem);
+                    }
+                    return true;
+                }
+            });
+            menu.add(0, v.getId(), 1, "Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (fragment instanceof MainActivityFragment) {
+                        MainActivityFragment f = (MainActivityFragment) fragment;
+                        f.deleteItem(listItem);
+                    }
+                    return true;
+                }
+            });
         }
     }
 }

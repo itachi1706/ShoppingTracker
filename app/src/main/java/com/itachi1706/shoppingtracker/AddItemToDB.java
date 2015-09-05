@@ -39,6 +39,8 @@ public class AddItemToDB extends AppCompatActivity {
 
     private static int VISION_REQUEST_CODE = 100;
     private static boolean isLegacyBarcode = false;
+    private static boolean isUpdateMode = false;
+    private static ListItem updateItem = null;
 
     private boolean newCategoryCreated = false;
     private ListCategory categorySelected = null;
@@ -101,13 +103,6 @@ public class AddItemToDB extends AppCompatActivity {
             }
         });
 
-
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
         spinnerList.clear();
         categoryList = db.getAllCategories();
         spinnerList.add("Create New Category...");
@@ -163,6 +158,14 @@ public class AddItemToDB extends AppCompatActivity {
             }
         });
 
+        if (this.getIntent().hasExtra("update") && this.getIntent().getBooleanExtra("update", false)){
+            long itemID = this.getIntent().getLongExtra("itemID", -1);
+            if (itemID != -1){
+                isUpdateMode = true;
+                ListItem item = db.getItemFromId(itemID);
+                autoFillInData(item);
+            }
+        }
 
     }
 
@@ -187,6 +190,30 @@ public class AddItemToDB extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void autoFillInData(ListItem item){
+        name.setText(item.getName());
+        if (item.getBarcode() != null){
+            barcode.setText(item.getBarcode());
+        }
+
+        if (item.getCategory() != 0){
+            categorySelection.setSelection(getCategoryPos(item) + 2);
+        }
+
+        updateItem = item;
+    }
+
+    private int getCategoryPos(ListItem item){
+        long categoryID = item.getCategory();
+        for (int i = 0; i < categoryList.size(); i++){
+            if (categoryList.get(i).getId() == categoryID){
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     private void processAdd() {
@@ -238,6 +265,12 @@ public class AddItemToDB extends AppCompatActivity {
 
         }
 
+        if (isUpdateMode)
+        {
+            processItemUpdate(itemName, itemBarcode, categoryID);
+            return;
+        }
+
         ListItem itemToAdd;
         if (categoryID == -1){
             //No category
@@ -261,6 +294,23 @@ public class AddItemToDB extends AppCompatActivity {
         Intent finishIntent = new Intent();
         finishIntent.putExtra("itemID", itemID);
         finishIntent.putExtra("catID", categoryID);
+        this.setResult(Activity.RESULT_OK, finishIntent);
+        this.finish();
+    }
+
+    private void processItemUpdate(String itemName, String itemBarcode, long categoryID){
+        ListItem updatedItem = new ListItem(updateItem.getId(), itemName);
+        if (itemBarcode != null){
+            updatedItem.setBarcode(itemBarcode);
+        }
+        if (categoryID != -1){
+            updatedItem.setCategory(categoryID);
+        }
+
+        db.updateProduct(updatedItem);
+        StaticReferences.updateItemTmp = updateItem;
+        Intent finishIntent = new Intent();
+        finishIntent.putExtra("itemID", updatedItem.getId());
         this.setResult(Activity.RESULT_OK, finishIntent);
         this.finish();
     }

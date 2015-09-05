@@ -1,7 +1,9 @@
 package com.itachi1706.shoppingtracker;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,6 +49,8 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     SharedPreferences sp;
 
     RecyclerView recyclerView;
+
+    private final int UPDATE_ITEM_REQUEST_CODE = 102;
 
     //From Main Activity
     CardView alwaysHideThisView;
@@ -178,6 +182,38 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     @Override
     public void updateItem(ListItem item) {
         //TODO: Figure out how I'm gonna update items
+        Intent updateItemIntent = new Intent(getActivity(), AddItemToDB.class);
+        updateItemIntent.putExtra("update", true);
+        updateItemIntent.putExtra("itemID", item.getId());
+        startActivityForResult(updateItemIntent, UPDATE_ITEM_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        Log.d(StaticReferences.TAG, "Main Activity Fragment receive request code: " + requestCode);
+
+        if (requestCode == UPDATE_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            final ListItem revertItem = StaticReferences.updateItemTmp;
+
+            if (revertItem != null) {
+                Log.d(StaticReferences.TAG, "Present update item with undo option");
+                Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "Item Updated Successfully", Snackbar.LENGTH_SHORT)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.i(StaticReferences.TAG, "Reverting update");
+                                db.updateProduct(revertItem);
+                                onRefresh();
+                            }
+                        }).show();
+            } else {
+                Log.d(StaticReferences.TAG, "Present update item without undo option");
+                Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "Item Updated Successfully", Snackbar.LENGTH_SHORT).show();
+            }
+
+            onRefresh();
+            StaticReferences.updateItemTmp = null;
+        }
     }
 
     private void checkAndUpdateAdapter() {
