@@ -2,12 +2,13 @@ package com.itachi1706.shoppingtracker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,12 +42,13 @@ public class AddItemToDB extends AppCompatActivity {
     private ListCategory categorySelected = null;
     private List<ListCategory> categoryList;
 
-    //App buttons
+    //App tools
     EditText name, barcode, category;
     Spinner categorySelection;
     Button scanBarcodeBtn;
     FloatingActionButton addItem;
     CoordinatorLayout coordinatorLayout;
+    TextInputLayout nameTil, barcodeTil, categoryTil;
 
     //Spinner
     List<String> spinnerList = new ArrayList<>();
@@ -65,10 +67,15 @@ public class AddItemToDB extends AppCompatActivity {
         categorySelection = (Spinner) findViewById(R.id.activity_add_category_spinner);
         addItem = (FloatingActionButton) findViewById(R.id.activity_add_fab);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_add_coordinator_layout);
+        nameTil = (TextInputLayout) findViewById(R.id.activity_add_name_til);
+        barcodeTil = (TextInputLayout) findViewById(R.id.activity_add_barcode_til);
+        categoryTil = (TextInputLayout) findViewById(R.id.actiity_add_category_add_til);
 
         //Init
         category.setText("");
         category.setVisibility(View.INVISIBLE);
+        nameTil.setErrorEnabled(true);
+        categoryTil.setErrorEnabled(true);
 
         //On Click Listeners
         scanBarcodeBtn.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +103,7 @@ public class AddItemToDB extends AppCompatActivity {
         ListDB db = new ListDB(this);
         categoryList = db.getAllCategories();
         spinnerList.add("Create New Category...");
+        spinnerList.add("Uncategorized");
         for (ListCategory category : categoryList){
             spinnerList.add(category.getName());
         }
@@ -103,19 +111,33 @@ public class AddItemToDB extends AppCompatActivity {
         spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySelection.setAdapter(spinnerAdapter);
+        categorySelection.setSelection(1);
         categorySelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0){
+                if (position == 0) {
                     //New Item, show category
                     category.setVisibility(View.VISIBLE);
+                    categoryTil.setVisibility(View.VISIBLE);
                     newCategoryCreated = true;
+                } else if (position == 1) {
+                    //No category
+                    category.setText("");
+                    category.setVisibility(View.INVISIBLE);
+                    categoryTil.setVisibility(View.INVISIBLE);
+                    newCategoryCreated = false;
                 } else {
                     category.setText("");
                     category.setVisibility(View.INVISIBLE);
+                    categoryTil.setVisibility(View.INVISIBLE);
                     newCategoryCreated = false;
-                    int itemPos = position - 1;
-                    if (itemPos == categoryList.size()){
+                    if (position <= 1) {
+                        //Error
+                        Log.e(StaticReferences.TAG, "Category position exceeded");
+                        return;
+                    }
+                    int itemPos = position - 2;
+                    if (itemPos == categoryList.size()) {
                         //Error
                         Log.e(StaticReferences.TAG, "Spinner selection exceeded category list");
                         return;
@@ -158,6 +180,27 @@ public class AddItemToDB extends AppCompatActivity {
     }
 
     private void processAdd() {
+        //Input Validation
+        name.setText(name.getText().toString().trim());
+        boolean error = false;
+        if (name.getText().toString().equals("")){
+            //No name entered (required field)
+            nameTil.setError("Required Field. Please enter a name for the item");
+            error = true;
+        }
+
+        if (newCategoryCreated){
+            category.setText(category.getText().toString().trim());
+            if (category.getText().toString().equals("")){
+                categoryTil.setError("Required Field. Please enter a category name");
+                error = true;
+            }
+        }
+
+        if (error) return;
+
+        //End of Input Validation
+
         //TODO: Remove test code
         Snackbar.make(coordinatorLayout, "Add item to Database", Snackbar.LENGTH_SHORT)
                 .setAction("DISMISS", new View.OnClickListener() {
