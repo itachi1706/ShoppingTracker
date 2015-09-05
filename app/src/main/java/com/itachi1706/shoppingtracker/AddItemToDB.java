@@ -1,12 +1,12 @@
 package com.itachi1706.shoppingtracker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -35,8 +34,6 @@ import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
 
 public class AddItemToDB extends AppCompatActivity {
 
@@ -84,6 +81,10 @@ public class AddItemToDB extends AppCompatActivity {
         nameTil.setErrorEnabled(true);
         categoryTil.setErrorEnabled(true);
         db = new ListDB(this);
+
+        if (this.getIntent().hasExtra("barcode_string")){
+            barcode.setText(this.getIntent().getStringExtra("barcode_string"));
+        }
 
         //On Click Listeners
         scanBarcodeBtn.setOnClickListener(new View.OnClickListener() {
@@ -256,6 +257,11 @@ public class AddItemToDB extends AppCompatActivity {
         Log.i(StaticReferences.TAG, "New Item Created with ID: " + itemID);
 
         Toast.makeText(this, "Item Created", Toast.LENGTH_SHORT).show();
+
+        Intent finishIntent = new Intent();
+        finishIntent.putExtra("itemID", itemID);
+        finishIntent.putExtra("catID", categoryID);
+        this.setResult(Activity.RESULT_OK, finishIntent);
         this.finish();
     }
 

@@ -1,5 +1,9 @@
 package com.itachi1706.shoppingtracker;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,19 +17,26 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
+import com.itachi1706.shoppingtracker.Database.ListDB;
 import com.itachi1706.shoppingtracker.FallbackBarcodeScanner.IntentIntegrator;
 import com.itachi1706.shoppingtracker.FallbackBarcodeScanner.IntentResult;
+import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.LegacyBarcode;
+import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.VisionAPI.VisionApiBarcodeCameraActivity;
+import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.lang.ref.WeakReference;
@@ -41,7 +52,11 @@ public class MainActivity extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
 
     private static int VISION_REQUEST_CODE = 100;
+    private static int ADD_ITEM_REQUEST_CODE = 101;
     private static boolean isLegacyBarcode = false;
+
+    private ListDB db;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
 
         this.coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_coordinator_layout);
 
+        this.db = new ListDB(this.getApplicationContext());
+        this.sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
         //Async Tasks here
         new AppUpdateChecker(this, PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()), true).execute();
 
@@ -131,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentFrag instanceof MainActivityFragment)
         {
             //Main Fragment
-            startActivity(new Intent(this, AddItemToDB.class));
+            startActivityForResult(new Intent(this, AddItemToDB.class), ADD_ITEM_REQUEST_CODE);
         } else if (currentFrag instanceof CartFragment)
         {
             //Cart Fragment (Scan barcode)
@@ -193,6 +211,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == ADD_ITEM_REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+                final Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
+                if (fragment instanceof MainActivityFragment){
+                    Snackbar.make(coordinatorLayout, "Item Added Successfully", Snackbar.LENGTH_SHORT).show();
+                    MainActivityFragment mainActivityFragment = (MainActivityFragment) fragment;
+                    mainActivityFragment.onRefresh();
+                } else if (fragment instanceof CartFragment) {
+                    processQuantityAndBarcodePrompt(data);
+                }
+            }
+        }
+
         if (!isLegacyBarcode) {
             //Check the request
             if (requestCode == VISION_REQUEST_CODE) {
@@ -221,14 +253,85 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleBarcode(Barcode barcode, LegacyBarcode legacyBarcode, boolean isLegacyBarcode){
-        //TODO Handle barcode
+        ListItem item;
         if (isLegacyBarcode){
             //Use Legacy barcode
             Log.d(StaticReferences.TAG, "Handling Legacy Barcode...");
+            item = getItemByBarcode(legacyBarcode.contents);
+
+            Intent intent = new Intent(this, AddItemToDB.class);
+            intent.putExtra("barcode_string", legacyBarcode.contents);
+
+            if (item == null)
+                startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
+            else {
+                Intent sendIntent = new Intent();
+                sendIntent.putExtra("itemID", item.getId());
+                processQuantityAndBarcodePrompt(sendIntent);
+            }
         } else {
             //Use Barcode
             Log.d(StaticReferences.TAG, "Handling GPS Vision Barcode...");
+            item = getItemByBarcode(barcode.rawValue);
+
+            Intent intent = new Intent(this, AddItemToDB.class);
+            intent.putExtra("barcode_string", barcode.rawValue);
+
+            if (item == null)
+                startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
+            else {
+                Intent sendIntent = new Intent();
+                sendIntent.putExtra("itemID", item.getId());
+                processQuantityAndBarcodePrompt(sendIntent);
+            }
         }
+    }
+
+    private void processQuantityAndBarcodePrompt(Intent data){
+        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+        final Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
+        if (!(fragment instanceof CartFragment))
+            return;
+
+        final CartFragment cartFragment = (CartFragment) fragment;
+        long itemID = -1;
+        if (data.hasExtra("itemID")){
+            itemID = data.getLongExtra("itemID", -1);
+        }
+        if (itemID == -1) return;
+
+        final ListItem item = db.getItemFromId(itemID);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(item.getName());
+        LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_add_item_to_cart, null);
+
+        final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
+        final EditText price = (EditText) view.findViewById(R.id.dialog_price);
+        builder.setView(view);
+        builder.setPositiveButton("Add to Cart", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String quantity = qty.getText().toString();
+                String itemPrice = price.getText().toString();
+                quantity = quantity.trim();
+                itemPrice = itemPrice.trim();
+                if (quantity.equals("") || itemPrice.equals("")) {
+                    Toast.makeText(MainActivity.this, "You need to enter a price and quantity", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                final CartItem cartItem = new CartItem(item.getId(), Integer.parseInt(qty.getText().toString()), Double.parseDouble(price.getText().toString()), item);
+                CartJsonHelper.addCartItemToJsonCart(cartItem, sp);
+                cartFragment.onRefresh();
+                Toast.makeText(MainActivity.this, "Item added to cart", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNeutralButton(android.R.string.cancel, null);
+        builder.show();
+    }
+
+    private ListItem getItemByBarcode(String barcode){
+        return db.getItemByBarcode(barcode);
     }
 
 

@@ -1,10 +1,10 @@
 package com.itachi1706.shoppingtracker.Adapters;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.app.AlertDialog;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itachi1706.shoppingtracker.MainActivity;
 import com.itachi1706.shoppingtracker.MainActivityFragment;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.ListBase;
@@ -205,7 +204,7 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
             builder.setTitle(((ListItem) item).getName());
             LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.dialog_add_item_to_cart, null);
+            @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_add_item_to_cart, null);
 
             final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
             final EditText price = (EditText) view.findViewById(R.id.dialog_price);

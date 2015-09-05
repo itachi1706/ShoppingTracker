@@ -213,7 +213,7 @@ public class ListDB extends SQLiteOpenHelper {
     private ListCategory generateCategoryFromCursor(Cursor cursor)
     {
         ListCategory category = new ListCategory();
-        category.setId(cursor.getInt(0));
+        category.setId(cursor.getLong(0));
         category.setName(cursor.getString(1));
         return category;
     }
@@ -226,7 +226,7 @@ public class ListDB extends SQLiteOpenHelper {
     private ListItem generateItemFromCursor(Cursor cursor)
     {
         ListItem item = new ListItem();
-        item.setId(cursor.getInt(0));
+        item.setId(cursor.getLong(0));
         item.setName(cursor.getString(1));
         item.setBarcode(cursor.getString(2));
 
@@ -239,7 +239,7 @@ public class ListDB extends SQLiteOpenHelper {
      * @param id id of cat
      * @return category object
      */
-    public ListCategory getCategoryFromId(int id)
+    public ListCategory getCategoryFromId(long id)
     {
         String query = "SELECT * FROM " + TABLE_CATEGORY + " WHERE " + CATEGORY_KEY + "=" + id + ";";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -265,7 +265,7 @@ public class ListDB extends SQLiteOpenHelper {
      * @param id id of item
      * @return item object
      */
-    public ListItem getItemFromId(int id)
+    public ListItem getItemFromId(long id)
     {
         String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_KEY + "=" + id + ";";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -438,5 +438,28 @@ public class ListDB extends SQLiteOpenHelper {
         db.close();
 
         return results;
+    }
+
+    /**
+     * Get Product by Barcode
+     * @param barcode Barcode value
+     * @return the item or null
+     */
+    public ListItem getItemByBarcode(String barcode){
+        String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_BARCODE + "=" + barcode + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        ListItem result = null;
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() == 0){
+            return null;
+        }
+
+        if (cursor.moveToFirst()){
+            do {
+                result = generateItemFromCursor(cursor);
+            } while (cursor.moveToNext());
+        }
+        return result;
     }
 }
