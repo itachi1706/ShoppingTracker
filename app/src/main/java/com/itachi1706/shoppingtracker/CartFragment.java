@@ -1,5 +1,9 @@
 package com.itachi1706.shoppingtracker;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,7 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itachi1706.shoppingtracker.Adapters.CartItemRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
@@ -110,6 +116,52 @@ public class CartFragment extends Fragment implements OnRefreshListener {
 
     }
 
+    @Override
+    public void cartItemClicked(CartItem item) {
+        processQuantityAndBarcodePrompt(item);
+    }
+
+    private void processQuantityAndBarcodePrompt(final CartItem item){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(item.getItem().getName());
+        LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_add_item_to_cart, null);
+
+        final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
+        final EditText price = (EditText) view.findViewById(R.id.dialog_price);
+        qty.setText(item.getQty() + "");
+        price.setText(item.getBasePrice() + "");
+        builder.setView(view);
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String quantity = qty.getText().toString();
+                String itemPrice = price.getText().toString();
+                quantity = quantity.trim();
+                itemPrice = itemPrice.trim();
+                if (quantity.equals("") || itemPrice.equals("")) {
+                    Toast.makeText(getActivity(), "You need to enter a price and quantity", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                final CartItem cartItem = new CartItem(item.getItem().getId(), Integer.parseInt(qty.getText().toString()), Double.parseDouble(price.getText().toString()), item.getItem());
+                CartJsonHelper.addCartItemToJsonCart(cartItem, sp);
+                onRefresh();
+                Toast.makeText(getActivity(), "Cart Item Updated", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                CartJsonHelper.removeCartItemFromJsonCart(item, sp);
+                adapter.removeItem(item);
+                calculateTotal();
+                Toast.makeText(getActivity(), "Item Removed from Cart", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
+    }
+
     private void checkAndUpdateAdapter()
     {
         JSONCart[] items = CartJsonHelper.getJsonCart(sp);
@@ -120,7 +172,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
             //Has cart, convert and show it
             Log.i(StaticReferences.TAG, "Found an existing cart, displaying it...");
             List<CartItem> cartItems = CartJsonHelper.convertJsonCartToCartItems(items);
-            adapter = new CartItemRecyclerAdapter(cartItems);
+            adapter = new CartItemRecyclerAdapter(cartItems, this);
             recyclerView.setAdapter(adapter);
 
             //Calculate and Display Total

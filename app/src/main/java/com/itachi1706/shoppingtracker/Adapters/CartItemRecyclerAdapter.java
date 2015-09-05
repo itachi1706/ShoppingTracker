@@ -1,5 +1,6 @@
 package com.itachi1706.shoppingtracker.Adapters;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itachi1706.shoppingtracker.CartFragment;
+import com.itachi1706.shoppingtracker.MainActivityFragment;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
+import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.R;
 
 import java.text.DecimalFormat;
@@ -20,10 +24,12 @@ import java.util.List;
 public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecyclerAdapter.CartViewHolder> {
 
     private List<CartItem> cartList;
+    private Fragment fragment;
 
-    public CartItemRecyclerAdapter(List<CartItem> cartItems)
+    public CartItemRecyclerAdapter(List<CartItem> cartItems, Fragment fragment)
     {
         this.cartList = cartItems;
+        this.fragment = fragment;
     }
 
     @Override
@@ -105,6 +111,13 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
         public void onClick(View v) {
             //TODO: Implement edit and remove for cart items
             Toast.makeText(v.getContext(), title.getText(), Toast.LENGTH_SHORT).show();
+            int position = this.getLayoutPosition();
+            CartItem item = cartList.get(position);
+
+            if (fragment instanceof MainActivityFragment) return;
+
+            CartFragment f = (CartFragment) fragment;
+            f.cartItemClicked(item);
         }
 
     }

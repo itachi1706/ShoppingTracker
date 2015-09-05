@@ -189,6 +189,11 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     }
 
     @Override
+    public void cartItemClicked(CartItem item) {
+
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         Log.d(StaticReferences.TAG, "Main Activity Fragment receive request code: " + requestCode);
 

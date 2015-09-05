@@ -15,4 +15,5 @@ public interface OnRefreshListener {
     void updateCategory(ListCategory newCategory);
     void deleteItem(ListItem item);
     void updateItem(ListItem item);
+    void cartItemClicked(CartItem item);
 }
