@@ -5,31 +5,43 @@
     android:background="?android:attr/selectableItemBackground"
     android:padding="2dip">
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
         android:layout_width="139dp"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/dialog_quantity"
-        android:hint="Qty"
-        android:maxLength="4"
-        android:layout_gravity="right"
+        android:id="@+id/dialog_quantity_til"
+        android:layout_gravity="end"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/dialog_quantity"
+            android:hint="Qty"
+            android:maxLength="4" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="171dp"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="8"
-        android:maxLength="10"
-        android:id="@+id/dialog_price"
-        android:hint="Price"
+        android:id="@+id/dialog_price_til"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/dialog_quantity"
-        android:layout_toStartOf="@+id/dialog_quantity" />
+        android:layout_toLeftOf="@+id/dialog_quantity_til"
+        android:layout_toStartOf="@+id/dialog_quantity_til">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:ems="8"
+            android:maxLength="10"
+            android:id="@+id/dialog_price"
+            android:hint="Price" />
+    </android.support.design.widget.TextInputLayout>
+
 
 </RelativeLayout>

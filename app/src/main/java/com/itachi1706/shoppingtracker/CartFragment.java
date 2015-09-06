@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -98,6 +97,15 @@ public class CartFragment extends Fragment implements OnRefreshListener {
         int id = item.getItemId();
 
         if (id == R.id.action_checkout) {
+            if (adapter == null) {
+                noItemInCartDuringCheckoutPrompt();
+                return true;
+            }
+            if (!adapter.hasCartItems()){
+                noItemInCartDuringCheckoutPrompt();
+                return true;
+            }
+
             //TODO: Checkout and save cart, for now its cleared
             DecimalFormat df = new DecimalFormat("0.00");
             CartJsonHelper.clearCart(sp);
@@ -109,6 +117,12 @@ public class CartFragment extends Fragment implements OnRefreshListener {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void noItemInCartDuringCheckoutPrompt(){
+        new AlertDialog.Builder(getActivity()).setTitle("No Cart Items")
+                .setMessage("You have no items in your cart to checkout")
+                .setPositiveButton(android.R.string.ok, null).show();
     }
 
     @Override
@@ -157,7 +171,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     private void processQuantityAndBarcodePrompt(final CartItem item){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(item.getItem().getName());
-        LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_add_item_to_cart, null);
 
         final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
