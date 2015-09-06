@@ -1,8 +1,10 @@
 package com.itachi1706.shoppingtracker.VisionAPI;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
@@ -31,6 +33,8 @@ public class AsyncTaskWaitForBarcode extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        Vibrator v = (Vibrator) activity.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(500);
         Toast.makeText(activity, "Found barcode", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         activity.setResult(Activity.RESULT_OK, intent);

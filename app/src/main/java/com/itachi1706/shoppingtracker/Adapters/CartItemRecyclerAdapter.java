@@ -70,6 +70,15 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
         notifyItemInserted(pos);
     }
 
+    public boolean hasCartItems(){
+        if (cartList != null) {
+            if (cartList.size() != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<CartItem> getCartItems(){
         return cartList;
     }

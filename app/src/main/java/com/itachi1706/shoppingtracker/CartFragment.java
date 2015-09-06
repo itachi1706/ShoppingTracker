@@ -221,10 +221,12 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     }
 
     private double getTotalSum(){
-        List<CartItem> cartItems = adapter.getCartItems();
         double total = 0;
-        for (CartItem item : cartItems){
-            total += (item.getQty() * item.getBasePrice());
+        if (adapter != null && adapter.hasCartItems()) {
+            List<CartItem> cartItems = adapter.getCartItems();
+            for (CartItem item : cartItems) {
+                total += (item.getQty() * item.getBasePrice());
+            }
         }
         return total;
     }
