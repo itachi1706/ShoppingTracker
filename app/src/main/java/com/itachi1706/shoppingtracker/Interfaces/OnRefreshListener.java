@@ -9,6 +9,7 @@ import com.itachi1706.shoppingtracker.Objects.ListItem;
  * for Shopping Tracker in package com.itachi1706.shoppingtracker
  */
 public interface OnRefreshListener {
+    void onSwipeRefresh();
     void onRefresh();
     void cartItemAdded(CartItem item);
     void deleteCategory(ListCategory category);

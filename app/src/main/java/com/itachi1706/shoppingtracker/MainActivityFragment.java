@@ -86,20 +86,29 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
 
         db = new ListDB(getActivity());
 
-        onRefresh();
+        onSwipeRefresh();
 
         return v;
     }
 
     @Override
     public void onRefresh() {
-        Log.d(StaticReferences.TAG, "Main Fragment triggered");
-
-        if (fab != null)
-            fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_48));
-        if (alwaysHideThisView != null)
-            alwaysHideThisView.setVisibility(View.GONE);
         checkAndUpdateAdapter();
+    }
+
+    @Override
+    public void onSwipeRefresh(){
+        if (StaticReferences.isMainSwiped || StaticReferences.isFirstLaunched) {
+            Log.d(StaticReferences.TAG, "Main Fragment triggered");
+            if (fab != null)
+                fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_48));
+            if (alwaysHideThisView != null)
+                alwaysHideThisView.setVisibility(View.GONE);
+            StaticReferences.isMainSwiped = false;
+            StaticReferences.isFirstLaunched = false;
+        }
+
+        onRefresh();
     }
 
     @Override

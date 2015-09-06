@@ -37,6 +37,7 @@ import com.itachi1706.shoppingtracker.Objects.LegacyBarcode;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.VisionAPI.VisionApiBarcodeCameraActivity;
 import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
+import com.itachi1706.shoppingtracker.utility.HistoryObjectHelper;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.lang.ref.WeakReference;
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (currentFrag instanceof CartFragment){
                     CartFragment cart = (CartFragment) currentFrag;
                     cart.onRefresh();
+                } else if (currentFrag instanceof HistoryFragment){
+                    HistoryFragment history = (HistoryFragment) currentFrag;
+                    history.onRefresh();
                 }
             }
 
@@ -166,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 fallbackToOldBarcodeHandling();
             }
+        } else if (currentFrag instanceof HistoryFragment){
+            //TODO: Remove this else statement when FAB is removed from the fragment
+            Snackbar.make(coordinatorLayout, "To Remove this FAB", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -181,6 +188,11 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.addFrag(new MainActivityFragment(), "Main");
         adapter.addFrag(new CartFragment(), "Cart");
+
+        //Check if there's history items, if so, add the fragment
+        if (HistoryObjectHelper.getHistoryFileListSize(this) > 0){
+            adapter.addFrag(new HistoryFragment(), "History (WIP)");
+        }
 
         viewPager.setAdapter(adapter);
     }
@@ -379,10 +391,14 @@ public class MainActivity extends AppCompatActivity {
             Fragment currentFrag = adapter.getItem(viewPager.getCurrentItem());
             if (currentFrag instanceof MainActivityFragment){
                 MainActivityFragment main = (MainActivityFragment) currentFrag;
-                main.onRefresh();
+                StaticReferences.isMainSwiped = true;
+                main.onSwipeRefresh();
             } else if (currentFrag instanceof CartFragment){
                 CartFragment cart = (CartFragment) currentFrag;
-                cart.onRefresh();
+                cart.onSwipeRefresh();
+            } else if (currentFrag instanceof HistoryFragment){
+                HistoryFragment history = (HistoryFragment) currentFrag;
+                history.onSwipeRefresh();
             }
         }
     }

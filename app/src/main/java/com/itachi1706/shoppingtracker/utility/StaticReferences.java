@@ -15,6 +15,8 @@ public class StaticReferences {
     public static final int HTTP_TIMEOUT = 15000; //15 seconds
     public static final String TAG = "ShoppingTracker";
     public static Context APP_CONTEXT;
+    public static boolean isMainSwiped = false;
+    public static boolean isFirstLaunched = true;
 
     public static Barcode barcode = null;
     public static ListItem updateItemTmp = null;

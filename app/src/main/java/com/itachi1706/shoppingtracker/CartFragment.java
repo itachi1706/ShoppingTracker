@@ -33,6 +33,7 @@ import com.itachi1706.shoppingtracker.Objects.JSONCart;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
+import com.itachi1706.shoppingtracker.utility.HistoryObjectHelper;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.text.DecimalFormat;
@@ -106,11 +107,28 @@ public class CartFragment extends Fragment implements OnRefreshListener {
                 return true;
             }
 
-            //TODO: Checkout and save cart, for now its cleared
+            double totalSum = getTotalSum();
             DecimalFormat df = new DecimalFormat("0.00");
+            String dialogMessage = "Checkout succeeded. Your cart total was $" + df.format(totalSum);
+
+            JSONCart[] items = CartJsonHelper.getJsonCart(sp);
+            if (items.length == 0){
+                Log.i(StaticReferences.TAG, "No existing cart found");
+                return true;
+            }
+
+            //Has cart, convert and show it
+            Log.i(StaticReferences.TAG, "Found an existing cart, converting and saving...");
+            List<CartItem> cartItems = CartJsonHelper.convertJsonCartToCartItems(items);
+            boolean result = HistoryObjectHelper.createNewHistoryFile(getContext(), cartItems, totalSum);
+            if (!result){
+                Log.e(StaticReferences.TAG, "Error occurred saving history");
+                dialogMessage += "\n\nNote: There is a problem saving a history of your cart. History will not be saved.";
+            }
+
             CartJsonHelper.clearCart(sp);
             new AlertDialog.Builder(getActivity()).setTitle("Checkout")
-                    .setMessage("Checkout succeeded. Your cart total was $" + df.format(getTotalSum()))
+                    .setMessage(dialogMessage)
                     .setPositiveButton(android.R.string.ok, null).show();
             onRefresh();
             return true;
@@ -126,7 +144,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     }
 
     @Override
-    public void onRefresh() {
+    public void onSwipeRefresh() {
         Log.d(StaticReferences.TAG, "Cart Fragment triggered");
         if (fab != null)
             fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.barcode_48));
@@ -137,6 +155,11 @@ public class CartFragment extends Fragment implements OnRefreshListener {
         if (showThisView != null)
             showThisView.setVisibility(View.VISIBLE);
 
+        onRefresh();
+    }
+
+    @Override
+    public void onRefresh() {
         checkAndUpdateAdapter();
     }
 
