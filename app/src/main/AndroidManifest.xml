@@ -42,6 +42,7 @@
             android:name=".VisionAPI.VisionApiBarcodeCameraActivity"
             android:label="@string/title_activity_barcode_camera"
             android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"
             tools:ignore="InnerclassSeparator" >
         </activity>
 

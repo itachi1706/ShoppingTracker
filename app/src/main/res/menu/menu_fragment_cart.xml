@@ -2,5 +2,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_checkout" android:title="@string/action_checkout"
-        android:orderInCategory="99" app:showAsAction="ifRoom" />
+        android:orderInCategory="99" app:showAsAction="ifRoom" android:icon="@drawable/cart_white_48" />
 </menu>

@@ -96,7 +96,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         Log.d(StaticReferences.TAG, "Main Fragment triggered");
 
         if (fab != null)
-            fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_black_48));
+            fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_48));
         if (alwaysHideThisView != null)
             alwaysHideThisView.setVisibility(View.GONE);
         checkAndUpdateAdapter();
