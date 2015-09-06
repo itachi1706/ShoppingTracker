@@ -114,10 +114,14 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh() {
         Log.d(StaticReferences.TAG, "Cart Fragment triggered");
-        fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.barcode_48));
-        totalPrice.setVisibility(View.VISIBLE);
-        totalPrice.setText("Total: $0.00");
-        showThisView.setVisibility(View.VISIBLE);
+        if (fab != null)
+            fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.barcode_48));
+        if (totalPrice != null) {
+            totalPrice.setVisibility(View.VISIBLE);
+            totalPrice.setText("Total: $0.00");
+        }
+        if (showThisView != null)
+            showThisView.setVisibility(View.VISIBLE);
 
         checkAndUpdateAdapter();
     }
