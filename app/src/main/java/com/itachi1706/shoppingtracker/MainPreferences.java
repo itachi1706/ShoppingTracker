@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
+import android.widget.Toast;
 
 import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
 import com.itachi1706.shoppingtracker.utility.StaticMethods;
@@ -35,13 +36,18 @@ public class MainPreferences extends AppCompatActivity {
      * General Preference Fragment
      */
     public static class GeneralPreferenceFragment extends PreferenceFragment{
+
+        SharedPreferences sp;
+
         @Override
         public void onCreate(Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
 
-            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+
+            if (sp.contains("debug")) sp.edit().remove("debug").apply();    //Remove debug code
 
             //Get General Information
             String version = "NULL", packageName = "NULL";
@@ -56,7 +62,9 @@ public class MainPreferences extends AppCompatActivity {
                 e.printStackTrace();
             }
             //General Information
-            findPreference("view_app_version").setSummary(version + "-b" + versionCode);
+            Preference appVersion = findPreference("view_app_version");
+            appVersion.setSummary(version + "-b" + versionCode);
+            enable_developer_testing_mode(appVersion);
             findPreference("view_app_name").setSummary(packageName);
             findPreference("view_sdk_version").setSummary(Build.VERSION.RELEASE);
 
@@ -126,13 +134,75 @@ public class MainPreferences extends AppCompatActivity {
                 }
             });
 
-            findPreference("force_crash").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            if (sp.contains("enable_testing_views") && sp.getBoolean("enable_testing_views", false)){
+                addPreferencesFromResource(R.xml.pref_testing);
+                refreshTestingPreference();
+            }
+        }
+
+        private void refreshTestingPreference(){
+            if (findPreference("force_crash") != null){
+                findPreference("force_crash").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        throw new RuntimeException("Test Crashing deliberately");
+                    }
+                });
+            }
+        }
+
+        private int clickTimes = 0;
+        private Toast toasty;
+
+        private void enable_developer_testing_mode(Preference preference){
+            preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    throw new RuntimeException("Test Crashing deliberately");
+                    boolean isDeveloper = false;
+                    if (sp.contains("enable_testing_views")) isDeveloper = sp.getBoolean("enable_testing_views", false);
+
+                    if (isDeveloper){
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "You are already a developer", Snackbar.LENGTH_SHORT).show();
+                        return true;
+                    }
+
+                    if (clickTimes >= 10){
+                        //Enable developer mode
+                        sp.edit().putBoolean("enable_testing_views", true).apply();
+                        addPreferencesFromResource(R.xml.pref_testing);
+                        refreshTestingPreference();
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "You are now a developer!", Snackbar.LENGTH_SHORT).show();
+                        return true;
+                    }
+
+                    switch (clickTimes){
+                        case 5: prompt(5); break;
+                        case 6: prompt(4); break;
+                        case 7: prompt(3); break;
+                        case 8: prompt(2); break;
+                        case 9: prompt(1); break;
+                    }
+
+                    clickTimes++;
+
+                    return true;
                 }
             });
         }
+
+        private void prompt(int left){
+            if (toasty != null){
+                toasty.cancel();
+            }
+            if (left > 1)
+                toasty = Toast.makeText(getActivity(), left + " more clicks to be a developer!", Toast.LENGTH_SHORT);
+            else
+                toasty = Toast.makeText(getActivity(), left + " more click to be a developer!", Toast.LENGTH_SHORT);
+            toasty.show();
+        }
+
     }
+
+
 
 }

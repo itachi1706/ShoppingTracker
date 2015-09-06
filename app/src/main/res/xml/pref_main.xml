@@ -19,11 +19,4 @@
         <Preference android:summary="None" android:title="Android Version" android:key="view_sdk_version" android:selectable="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Testing">
-        <CheckBoxPreference android:title="Vision API Continuous Scanning" android:key="vision_continuous_test" android:defaultValue="false"
-            android:summary="Disables the AsyncTask that will kill the barcode scanning process of Vision API after a barcode detection" />
-        <CheckBoxPreference android:title="Debug Testing Mode" android:key="debug" android:defaultValue="false" />
-        <Preference android:title="Force a Crash" android:key="force_crash" />
-    </PreferenceCategory>
-
 </PreferenceScreen>

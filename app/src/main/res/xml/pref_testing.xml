@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Developer Options">
+        <CheckBoxPreference android:title="Vision API Continuous Scanning" android:key="vision_continuous_test" android:defaultValue="false"
+            android:summary="Disables the AsyncTask that will kill the barcode scanning process of Vision API after a barcode detection" />
+        <Preference android:title="Force a Crash" android:key="force_crash" />
+    </PreferenceCategory>
+</PreferenceScreen>

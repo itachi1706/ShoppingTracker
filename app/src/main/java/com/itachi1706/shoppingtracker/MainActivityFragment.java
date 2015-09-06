@@ -31,7 +31,6 @@ import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
-import com.itachi1706.shoppingtracker.utility.GenerateSampleData;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.util.ArrayList;
@@ -98,11 +97,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
 
         fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_black_48));
         alwaysHideThisView.setVisibility(View.GONE);
-        boolean isDebug = sp.getBoolean("debug", false);
-        if (!isDebug)
-            checkAndUpdateAdapter();
-        else
-            checkAndUpdateAdapterDebug();
+        checkAndUpdateAdapter();
     }
 
     @Override
@@ -251,13 +246,5 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
         }
 
         return result;
-    }
-
-
-    //Sample Class for testing
-    private void checkAndUpdateAdapterDebug(){
-        List<ListBase> items = GenerateSampleData.generateItems();
-        adapter = new ItemListRecyclerAdapter(items, sp, this);
-        recyclerView.setAdapter(adapter);
     }
 }

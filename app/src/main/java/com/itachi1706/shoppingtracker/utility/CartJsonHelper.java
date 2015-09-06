@@ -95,13 +95,8 @@ public class CartJsonHelper {
     public static List<CartItem> convertJsonCartToCartItems(JSONCart[] jsonCarts){
         List<CartItem> cartItems = new ArrayList<>();
 
-        List<ListItem> listItems = GenerateSampleData.generateAllItemsOnly();
         ListDB db = new ListDB(StaticReferences.APP_CONTEXT);
-        List<ListItem> dbItems = db.getAllItems();
-
-        for (ListItem item : dbItems){
-            listItems.add(item);
-        }
+        List<ListItem> listItems = db.getAllItems();
 
         for (JSONCart cart : jsonCarts){
             ListItem itemToAdd = findCartItem(cart.getId(), listItems);
