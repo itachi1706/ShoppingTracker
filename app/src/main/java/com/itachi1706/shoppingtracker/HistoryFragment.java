@@ -1,14 +1,14 @@
 package com.itachi1706.shoppingtracker;
 
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,7 +50,6 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
     RecyclerView recyclerView;
 
     //Has Items
-    //TODO: Create a history adapter for the recycler view
     HistoryListRecyclerAdapter adapter;
 
     //No Items
@@ -97,11 +96,20 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
         int id = item.getItemId();
 
         if (id == R.id.action_delete_all) {
-            if (layout != null)
-                Snackbar.make(layout, "TODO: DELETE ALL", Snackbar.LENGTH_SHORT).show();
-            else
-                ToastHelper.createShortToast(getContext(), "TODO: DELETE ALL");
-
+            new AlertDialog.Builder(getActivity()).setTitle("Delete all history")
+                    .setMessage("Are you sure you wish to clear all of your history?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (HistoryObjectHelper.deleteAllHistoryFiles(getContext())){
+                                if (layout != null)
+                                    Snackbar.make(layout, "All history deleted", Snackbar.LENGTH_SHORT).show();
+                                else
+                                    ToastHelper.createShortToast(getContext(), "All history deleted");
+                                onRefresh();
+                            }
+                        }
+                    }).setNegativeButton(android.R.string.no, null).show();
             return true;
         }
 
@@ -109,7 +117,6 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
     }
 
     private void checkAndUpdateAdapter(){
-        //TODO: Get all history
         List<HistoryItem> items = HistoryObjectHelper.getAllHistoryItemFromFile(getActivity().getApplicationContext());
         if (items == null){
             Log.e(StaticReferences.TAG, "Unable to get history folder");
@@ -121,7 +128,6 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
             Log.i(StaticReferences.TAG, "No history found");
             recyclerView.setAdapter(noItemsadapter);
         } else {
-            //TODO: Place all the history into the adapter
             adapter = new HistoryListRecyclerAdapter(items, this);
             recyclerView.setAdapter(adapter);
         }
@@ -178,5 +184,25 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
     public void selectHistoryItem(HistoryItem item) {
         //TODO: As what the toast message says
         ToastHelper.createShortToast(getActivity(), "TODO: Launch activity to view " + item.getDate());
+    }
+
+    @Override
+    public void deleteHistoryFile(final HistoryItem item) {
+        new AlertDialog.Builder(getActivity()).setTitle("Delete this history?")
+                .setMessage("Are you sure you wish to remove this history?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (HistoryObjectHelper.deleteHistoryFile(getContext(), item)){
+                            Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "History Deleted", Snackbar.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Snackbar.make(getActivity().findViewById(R.id.activity_coordinator_layout), "Unable to delete history", Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
+                        onRefresh();
+                    }
+                }).show();
     }
 }

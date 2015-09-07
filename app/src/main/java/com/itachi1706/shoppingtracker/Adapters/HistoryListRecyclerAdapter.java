@@ -2,7 +2,9 @@ package com.itachi1706.shoppingtracker.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -56,7 +58,7 @@ public class HistoryListRecyclerAdapter extends RecyclerView.Adapter<HistoryList
         return items.size();
     }
 
-    public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener{
 
         protected TextView histDateTime;
         protected TextView histTotal;
@@ -67,16 +69,37 @@ public class HistoryListRecyclerAdapter extends RecyclerView.Adapter<HistoryList
             histDateTime = (TextView) v.findViewById(R.id.item_title);
             histTotal = (TextView) v.findViewById(R.id.item_barcode);
             v.setOnClickListener(this);
+            v.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int position = this.getLayoutPosition();
             HistoryItem item = items.get(position);
+
             if (fragment instanceof HistoryFragment){
                 HistoryFragment frag = (HistoryFragment) fragment;
                 frag.selectHistoryItem(item);
             }
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            int position = this.getLayoutPosition();
+            final HistoryItem histItem = items.get(position);
+
+            if (!(fragment instanceof HistoryFragment)) return;
+
+            menu.add(0, v.getId(), 0, "Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (fragment instanceof HistoryFragment) {
+                        HistoryFragment f = (HistoryFragment) fragment;
+                        f.deleteHistoryFile(histItem);
+                    }
+                    return true;
+                }
+            });
         }
     }
 }

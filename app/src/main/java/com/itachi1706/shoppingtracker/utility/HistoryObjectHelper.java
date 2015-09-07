@@ -11,13 +11,9 @@ import com.itachi1706.shoppingtracker.Objects.HistoryItem;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +124,37 @@ public class HistoryObjectHelper {
             itemList.add(item);
         }
         return itemList;
+    }
+
+    public static boolean deleteHistoryFile(Context context, HistoryItem item) {
+        if (!createFolderIfNotExists(context)) {
+            Log.e(StaticReferences.TAG, "Unable to create folder to store history, Aborting...");
+            return false;
+        }
+
+        String timeStamp = item.getDate() + "";
+        String fileName = getFolder(context) + File.separator + "history-" + timeStamp + ".json";
+        File file = new File(fileName);
+        return file.exists() && file.delete();
+    }
+
+    public static boolean deleteAllHistoryFiles(Context context){
+        if (!createFolderIfNotExists(context)){
+            Log.e(StaticReferences.TAG, "Unable to create folder to store history, Aborting...");
+            return false;
+        }
+
+        String folderPath = getFolder(context);
+        File folder = new File(folderPath);
+
+        File[] fileList = folder.listFiles();
+
+        for (File file : fileList){
+            //noinspection ResultOfMethodCallIgnored
+            file.delete();
+        }
+
+        return true;
     }
 
     public static int getHistoryFileListSize(Context context){
