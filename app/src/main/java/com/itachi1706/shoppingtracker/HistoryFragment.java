@@ -183,8 +183,6 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
 
     @Override
     public void selectHistoryItem(HistoryItem item) {
-        //TODO: As what the toast message says
-        ToastHelper.createShortToast(getActivity(), "TODO: Launch activity to view " + item.getDate());
         String backToJson = HistoryObjectHelper.generateHistoryJsonString(item);
         Intent intent = new Intent(getActivity(), ViewHistoryItemActivity.class);
         intent.putExtra("itemJSON", backToJson);

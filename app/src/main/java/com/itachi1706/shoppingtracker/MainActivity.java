@@ -168,9 +168,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 fallbackToOldBarcodeHandling();
             }
-        } else if (currentFrag instanceof HistoryFragment){
-            //TODO: Remove this else statement when FAB is removed from the fragment
-            Snackbar.make(coordinatorLayout, "To Remove this FAB", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -217,6 +214,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        StaticReferences.isFirstLaunched = true;
     }
 
     @Override
