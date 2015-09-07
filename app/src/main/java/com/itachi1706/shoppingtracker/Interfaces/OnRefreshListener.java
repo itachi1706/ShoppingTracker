@@ -1,6 +1,7 @@
 package com.itachi1706.shoppingtracker.Interfaces;
 
 import com.itachi1706.shoppingtracker.Objects.CartItem;
+import com.itachi1706.shoppingtracker.Objects.HistoryItem;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 
@@ -17,4 +18,5 @@ public interface OnRefreshListener {
     void deleteItem(ListItem item);
     void updateItem(ListItem item);
     void cartItemClicked(CartItem item);
+    void selectHistoryItem(HistoryItem item);
 }

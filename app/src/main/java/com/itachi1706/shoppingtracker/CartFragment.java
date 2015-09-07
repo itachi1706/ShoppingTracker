@@ -29,6 +29,7 @@ import com.itachi1706.shoppingtracker.Adapters.CartItemRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
+import com.itachi1706.shoppingtracker.Objects.HistoryItem;
 import com.itachi1706.shoppingtracker.Objects.JSONCart;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
@@ -146,8 +147,10 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onSwipeRefresh() {
         Log.d(StaticReferences.TAG, "Cart Fragment triggered");
-        if (fab != null)
+        if (fab != null) {
             fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.barcode_48));
+            fab.show();
+        }
         if (totalPrice != null) {
             totalPrice.setVisibility(View.VISIBLE);
             totalPrice.setText("Total: $0.00");
@@ -189,6 +192,11 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     @Override
     public void cartItemClicked(CartItem item) {
         processQuantityAndBarcodePrompt(item);
+    }
+
+    @Override
+    public void selectHistoryItem(HistoryItem item) {
+
     }
 
     private void processQuantityAndBarcodePrompt(final CartItem item){

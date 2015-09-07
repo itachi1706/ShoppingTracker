@@ -27,6 +27,7 @@ import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Database.ListDB;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
+import com.itachi1706.shoppingtracker.Objects.HistoryItem;
 import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
@@ -100,8 +101,10 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     public void onSwipeRefresh(){
         if (StaticReferences.isMainSwiped || StaticReferences.isFirstLaunched) {
             Log.d(StaticReferences.TAG, "Main Fragment triggered");
-            if (fab != null)
+            if (fab != null) {
                 fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.plus_48));
+                fab.show();
+            }
             if (alwaysHideThisView != null)
                 alwaysHideThisView.setVisibility(View.GONE);
             StaticReferences.isMainSwiped = false;
@@ -196,6 +199,11 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
 
     @Override
     public void cartItemClicked(CartItem item) {
+
+    }
+
+    @Override
+    public void selectHistoryItem(HistoryItem item) {
 
     }
 

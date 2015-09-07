@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.itachi1706.shoppingtracker.Adapters.HistoryListRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Adapters.StringRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Interfaces.OnRefreshListener;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
@@ -50,6 +51,7 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
 
     //Has Items
     //TODO: Create a history adapter for the recycler view
+    HistoryListRecyclerAdapter adapter;
 
     //No Items
     String[] noItems = {"You do not have any history found, checkout some carts now!"};
@@ -120,7 +122,8 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
             recyclerView.setAdapter(noItemsadapter);
         } else {
             //TODO: Place all the history into the adapter
-            recyclerView.setAdapter(noItemsadapter);
+            adapter = new HistoryListRecyclerAdapter(items, this);
+            recyclerView.setAdapter(adapter);
         }
     }
 
@@ -134,6 +137,9 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
         Log.d(StaticReferences.TAG, "History Fragment triggered");
         if (alwaysHideThisView != null)
             alwaysHideThisView.setVisibility(View.GONE);
+        if (fab != null){
+            fab.hide();
+        }
 
         onRefresh();
     }
@@ -166,5 +172,11 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
     @Override
     public void cartItemClicked(CartItem item) {
 
+    }
+
+    @Override
+    public void selectHistoryItem(HistoryItem item) {
+        //TODO: As what the toast message says
+        ToastHelper.createShortToast(getActivity(), "TODO: Launch activity to view " + item.getDate());
     }
 }
