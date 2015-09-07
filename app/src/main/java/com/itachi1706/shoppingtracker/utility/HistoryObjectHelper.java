@@ -23,12 +23,12 @@ import java.util.List;
  */
 public class HistoryObjectHelper {
 
-    private static String generateHistoryJsonString(HistoryItem historyItems){
+    public static String generateHistoryJsonString(HistoryItem historyItems){
         Gson gson = new GsonBuilder().create();
         return gson.toJson(historyItems, HistoryItem.class);
     }
 
-    private static HistoryItem getHistoryItemObjectFromJson(String jsonString){
+    public static HistoryItem getHistoryItemObjectFromJson(String jsonString){
         Gson gson = new Gson();
         return gson.fromJson(jsonString, HistoryItem.class);
     }

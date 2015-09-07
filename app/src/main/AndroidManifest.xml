@@ -54,6 +54,11 @@
             android:name=".AddItemToDBActivity"
             android:label="@string/title_activity_add_item_to_db" >
         </activity>
+        <activity
+            android:name=".ViewHistoryItemActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_activity_view_history_item" >
+        </activity>
     </application>
 
 </manifest>

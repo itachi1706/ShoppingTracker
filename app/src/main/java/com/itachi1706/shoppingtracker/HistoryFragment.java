@@ -1,6 +1,7 @@
 package com.itachi1706.shoppingtracker;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -184,6 +185,10 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
     public void selectHistoryItem(HistoryItem item) {
         //TODO: As what the toast message says
         ToastHelper.createShortToast(getActivity(), "TODO: Launch activity to view " + item.getDate());
+        String backToJson = HistoryObjectHelper.generateHistoryJsonString(item);
+        Intent intent = new Intent(getActivity(), ViewHistoryItemActivity.class);
+        intent.putExtra("itemJSON", backToJson);
+        startActivity(intent);
     }
 
     @Override
