@@ -53,11 +53,17 @@
         <activity
             android:name=".AddItemToDBActivity"
             android:label="@string/title_activity_add_item_to_db" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.itachi1706.shoppingtracker.MainActivity" />
         </activity>
         <activity
             android:name=".ViewHistoryItemActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_activity_view_history_item" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.itachi1706.shoppingtracker.MainActivity" />
         </activity>
     </application>
 

@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -158,6 +159,11 @@ public class AddItemToDBActivity extends AppCompatActivity {
             }
         });
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.close_white_24);
+        }
+
         if (this.getIntent().hasExtra("update") && this.getIntent().getBooleanExtra("update", false)){
             long itemID = this.getIntent().getLongExtra("itemID", -1);
             if (itemID != -1){
@@ -188,6 +194,9 @@ public class AddItemToDBActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, MainPreferences.class));
+            return true;
+        } else if (id == R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 

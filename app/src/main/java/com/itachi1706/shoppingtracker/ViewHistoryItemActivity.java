@@ -2,9 +2,10 @@ package com.itachi1706.shoppingtracker;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +21,6 @@ import com.itachi1706.shoppingtracker.utility.HistoryObjectHelper;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 public class ViewHistoryItemActivity extends AppCompatActivity {
 
@@ -49,8 +49,10 @@ public class ViewHistoryItemActivity extends AppCompatActivity {
 
         DecimalFormat df = new DecimalFormat("0.00");
 
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Total: $" + df.format(item.getTotal()));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         this.recyclerView = (RecyclerView) findViewById(R.id.rv_history_item);
 
@@ -88,6 +90,9 @@ public class ViewHistoryItemActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, MainPreferences.class));
+            return true;
+        } else if (id == R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 
