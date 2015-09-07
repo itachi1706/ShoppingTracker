@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentFrag instanceof MainActivityFragment)
         {
             //Main Fragment
-            startActivityForResult(new Intent(this, AddItemToDB.class), ADD_ITEM_REQUEST_CODE);
+            startActivityForResult(new Intent(this, AddItemToDBActivity.class), ADD_ITEM_REQUEST_CODE);
         } else if (currentFrag instanceof CartFragment)
         {
             //Cart Fragment (Scan barcode)
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(StaticReferences.TAG, "Handling Legacy Barcode...");
             item = getItemByBarcode(legacyBarcode.contents);
 
-            Intent intent = new Intent(this, AddItemToDB.class);
+            Intent intent = new Intent(this, AddItemToDBActivity.class);
             intent.putExtra("barcode_string", legacyBarcode.contents);
 
             if (item == null)
@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(StaticReferences.TAG, "Handling GPS Vision Barcode...");
             item = getItemByBarcode(barcode.rawValue);
 
-            Intent intent = new Intent(this, AddItemToDB.class);
+            Intent intent = new Intent(this, AddItemToDBActivity.class);
             intent.putExtra("barcode_string", barcode.rawValue);
 
             if (item == null)
@@ -344,7 +344,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ListItem getItemByBarcode(String barcode){
-        return db.getItemByBarcode(barcode);
+        String trimmedBarcode = barcode.trim();
+        return db.getItemByBarcode(trimmedBarcode);
     }
 
 

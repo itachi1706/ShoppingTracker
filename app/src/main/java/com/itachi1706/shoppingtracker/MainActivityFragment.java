@@ -188,7 +188,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     @Override
     public void updateItem(ListItem item) {
         //TODO: Figure out how I'm gonna update items
-        Intent updateItemIntent = new Intent(getActivity(), AddItemToDB.class);
+        Intent updateItemIntent = new Intent(getActivity(), AddItemToDBActivity.class);
         updateItemIntent.putExtra("update", true);
         updateItemIntent.putExtra("itemID", item.getId());
         startActivityForResult(updateItemIntent, UPDATE_ITEM_REQUEST_CODE);

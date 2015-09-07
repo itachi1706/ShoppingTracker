@@ -35,7 +35,7 @@ import com.itachi1706.shoppingtracker.utility.StaticReferences;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddItemToDB extends AppCompatActivity {
+public class AddItemToDBActivity extends AppCompatActivity {
 
     private static int VISION_REQUEST_CODE = 100;
     private static boolean isLegacyBarcode = false;
@@ -163,6 +163,8 @@ public class AddItemToDB extends AppCompatActivity {
             if (itemID != -1){
                 isUpdateMode = true;
                 ListItem item = db.getItemFromId(itemID);
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setTitle("Edit " + item.getName());
                 autoFillInData(item);
             }
         }

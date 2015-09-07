@@ -51,7 +51,7 @@
             android:value="4a76e5bed29f3c6bc0d8e90c16212c07cb8efbc0" />
 
         <activity
-            android:name=".AddItemToDB"
+            android:name=".AddItemToDBActivity"
             android:label="@string/title_activity_add_item_to_db" >
         </activity>
     </application>
