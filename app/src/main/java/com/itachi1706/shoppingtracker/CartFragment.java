@@ -199,6 +199,11 @@ public class CartFragment extends Fragment implements OnRefreshListener {
 
     }
 
+    @Override
+    public void deleteHistoryFile(HistoryItem item) {
+
+    }
+
     private void processQuantityAndBarcodePrompt(final CartItem item){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(item.getItem().getName());
@@ -207,9 +212,11 @@ public class CartFragment extends Fragment implements OnRefreshListener {
 
         final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
         final EditText price = (EditText) view.findViewById(R.id.dialog_price);
+        DecimalFormat df = new DecimalFormat("0.00");
         qty.setText(item.getQty() + "");
-        price.setText(item.getBasePrice() + "");
+        price.setText(df.format(item.getBasePrice()));
         builder.setView(view);
+        builder.setCancelable(false);
         builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

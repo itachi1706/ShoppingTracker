@@ -246,6 +246,7 @@ public class ItemListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
             final EditText price = (EditText) view.findViewById(R.id.dialog_price);
             builder.setView(view);
+            builder.setCancelable(false);
             builder.setPositiveButton("Add to Cart", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

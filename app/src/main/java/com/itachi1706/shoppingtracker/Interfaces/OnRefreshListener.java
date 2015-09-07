@@ -19,4 +19,5 @@ public interface OnRefreshListener {
     void updateItem(ListItem item);
     void cartItemClicked(CartItem item);
     void selectHistoryItem(HistoryItem item);
+    void deleteHistoryFile(HistoryItem item);
 }
