@@ -2,7 +2,6 @@ package com.itachi1706.shoppingtracker;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -319,8 +317,7 @@ public class MainActivity extends AppCompatActivity {
         final ListItem item = db.getItemFromId(itemID);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(item.getName());
-        LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_add_item_to_cart, null);
+        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.dialog_add_item_to_cart, null);
 
         final EditText qty = (EditText) view.findViewById(R.id.dialog_quantity);
         final EditText price = (EditText) view.findViewById(R.id.dialog_price);
