@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Check if there's history items, if so, add the fragment
         if (HistoryObjectHelper.getHistoryFileListSize(this) > 0){
-            adapter.addFrag(new HistoryFragment(), "History (WIP)");
+            adapter.addFrag(new HistoryFragment(), "History");
         }
 
         viewPager.setAdapter(adapter);

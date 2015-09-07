@@ -23,8 +23,8 @@ android {
         applicationId "com.itachi1706.shoppingtracker"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 67
-        versionName "0.1_demo 5"
+        versionCode 76
+        versionName "1.0"
     }
     buildTypes {
         release {
