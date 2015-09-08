@@ -3,6 +3,8 @@
     <PreferenceCategory android:title="General Settings">
         <CheckBoxPreference android:title="Use Google Mobile Vision API" android:key="vision_api_use" android:defaultValue="true"
             android:summary="Uses the barcode scanner from the Google Vision API. (Requires Google Play Services 8.1)" />
+        <ListPreference android:title="Currency Symbol" android:key="currency_symbol" android:defaultValue="$"
+            android:entries="@array/moneyCodeName" android:entryValues="@array/moneyCode" android:summary="%s" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced Settings">

@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.R;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
+import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class HistoryItemRecyclerAdapter extends RecyclerView.Adapter<HistoryItem
         cartViewHolder.quantity.setText("Qty: " + s.getQty());
 
         DecimalFormat df = new DecimalFormat("0.00");
-        cartViewHolder.basePrice.setText("$" + df.format(s.getBasePrice()));
+        cartViewHolder.basePrice.setText(StaticMethods.getPriceSymbol() + df.format(s.getBasePrice()));
     }
 
     @Override

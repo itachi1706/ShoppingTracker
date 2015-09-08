@@ -13,6 +13,7 @@ import com.itachi1706.shoppingtracker.MainActivityFragment;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.ListBase;
 import com.itachi1706.shoppingtracker.R;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -52,7 +53,7 @@ public class CartItemRecyclerAdapter extends RecyclerView.Adapter<CartItemRecycl
         cartViewHolder.quantity.setText("Qty: " + s.getQty());
 
         DecimalFormat df = new DecimalFormat("0.00");
-        cartViewHolder.basePrice.setText("$" + df.format(s.getBasePrice()));
+        cartViewHolder.basePrice.setText(StaticMethods.getPriceSymbol() + df.format(s.getBasePrice()));
     }
 
     @Override

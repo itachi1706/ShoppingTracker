@@ -35,6 +35,7 @@ import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
 import com.itachi1706.shoppingtracker.utility.HistoryObjectHelper;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.text.DecimalFormat;
@@ -110,7 +111,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
 
             double totalSum = getTotalSum();
             DecimalFormat df = new DecimalFormat("0.00");
-            String dialogMessage = "Checkout succeeded. Your cart total was $" + df.format(totalSum);
+            String dialogMessage = "Checkout succeeded. Your cart total was " + StaticMethods.getPriceSymbol() + df.format(totalSum);
 
             JSONCart[] items = CartJsonHelper.getJsonCart(sp);
             if (items.length == 0){
@@ -153,7 +154,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
         }
         if (totalPrice != null) {
             totalPrice.setVisibility(View.VISIBLE);
-            totalPrice.setText("Total: $0.00");
+            totalPrice.setText("Total: " + StaticMethods.getPriceSymbol() + "0.00");
         }
         if (showThisView != null)
             showThisView.setVisibility(View.VISIBLE);
@@ -269,7 +270,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
         double total = getTotalSum();
 
         DecimalFormat df = new DecimalFormat("0.00");
-        totalPrice.setText("Total: $" + df.format(total));
+        totalPrice.setText("Total: " + StaticMethods.getPriceSymbol() + df.format(total));
     }
 
     private double getTotalSum(){

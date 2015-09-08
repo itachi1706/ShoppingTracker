@@ -1,5 +1,8 @@
 package com.itachi1706.shoppingtracker.utility;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -38,5 +41,10 @@ public class StaticMethods {
         ArrayList<String> changelogArrList = new ArrayList<>();
         Collections.addAll(changelogArrList, changelog);
         return getChangelogFromArrayList(changelogArrList);
+    }
+
+    public static String getPriceSymbol(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(StaticReferences.APP_CONTEXT);
+        return sp.getString("currency_symbol","$");
     }
 }

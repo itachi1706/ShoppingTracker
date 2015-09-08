@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.itachi1706.shoppingtracker.HistoryFragment;
 import com.itachi1706.shoppingtracker.Objects.HistoryItem;
 import com.itachi1706.shoppingtracker.R;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ public class HistoryListRecyclerAdapter extends RecyclerView.Adapter<HistoryList
         Date d = new Date(item.getDate());
         DecimalFormat df = new DecimalFormat("0.00");
         holder.histDateTime.setText("Cart on " + d.toString());
-        holder.histTotal.setText("Total Spent: $" + df.format(item.getTotal()));
+        holder.histTotal.setText("Total Spent: " + StaticMethods.getPriceSymbol() + df.format(item.getTotal()));
     }
 
     @Override

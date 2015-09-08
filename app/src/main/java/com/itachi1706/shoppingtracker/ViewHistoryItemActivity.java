@@ -18,6 +18,7 @@ import com.itachi1706.shoppingtracker.Adapters.HistoryItemRecyclerAdapter;
 import com.itachi1706.shoppingtracker.Objects.CartItem;
 import com.itachi1706.shoppingtracker.Objects.HistoryItem;
 import com.itachi1706.shoppingtracker.utility.HistoryObjectHelper;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
 import java.text.DecimalFormat;
@@ -50,7 +51,7 @@ public class ViewHistoryItemActivity extends AppCompatActivity {
         DecimalFormat df = new DecimalFormat("0.00");
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Total: $" + df.format(item.getTotal()));
+            getSupportActionBar().setTitle("Total: " + StaticMethods.getPriceSymbol() + df.format(item.getTotal()));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
