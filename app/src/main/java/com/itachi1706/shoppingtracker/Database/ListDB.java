@@ -446,7 +446,7 @@ public class ListDB extends SQLiteOpenHelper {
      * @return the item or null
      */
     public ListItem getItemByBarcode(String barcode){
-        String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_BARCODE + "=" + barcode + ";";
+        String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_BARCODE + "='" + barcode + "';";
         SQLiteDatabase db = this.getReadableDatabase();
         ListItem result = null;
 

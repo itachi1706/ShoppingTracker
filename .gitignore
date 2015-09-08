@@ -36,3 +36,6 @@ proguard/
 
 # Mac Files
 .DS_Store
+
+# API Secret don't commit
+fabric.properties
