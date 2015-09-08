@@ -33,6 +33,8 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     BarcodeTrackerFactory barcodeFactory;
 
+    AsyncTask asyncTask;
+
     SharedPreferences sp;
 
     private static final String TAG = "VisionAPI_Barcode";
@@ -78,6 +80,15 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
             mCameraSource.release(); //release the resources
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        if (asyncTask != null){
+            asyncTask.cancel(true);
+            asyncTask = null;
+        }
+    }
+
     //Camera Source Creation
     private void createCameraSource(){
         Context context = getApplicationContext();
@@ -101,7 +112,7 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
             mPreview.start(mCameraSource, mGraphicOverlay);
             boolean startAsyncTask = sp.getBoolean("vision_continuous_test", false);
             if (!startAsyncTask)
-                new AsyncTaskWaitForBarcode(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                asyncTask = new AsyncTaskWaitForBarcode(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (IOException e){
             mCameraSource.release();
             mCameraSource = null;

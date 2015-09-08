@@ -16,6 +16,7 @@ import com.itachi1706.shoppingtracker.utility.StaticReferences;
 public class AsyncTaskWaitForBarcode extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
+    private boolean isInterrupted = false;
 
     public AsyncTaskWaitForBarcode(Activity activity){
         this.activity = activity;
@@ -23,6 +24,13 @@ public class AsyncTaskWaitForBarcode extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
+        StaticReferences.barcode = null;
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            isInterrupted = true;
+            return null;
+        }
         while (true) {
             if (StaticReferences.barcode != null) {
                 break;
@@ -33,6 +41,7 @@ public class AsyncTaskWaitForBarcode extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        if (isInterrupted) return;
         Vibrator v = (Vibrator) activity.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
         Toast.makeText(activity, "Found barcode", Toast.LENGTH_SHORT).show();
