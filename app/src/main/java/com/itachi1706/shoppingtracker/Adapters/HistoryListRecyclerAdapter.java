@@ -14,10 +14,13 @@ import com.itachi1706.shoppingtracker.Objects.HistoryItem;
 import com.itachi1706.shoppingtracker.R;
 import com.itachi1706.shoppingtracker.utility.StaticMethods;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Kenneth on 9/7/2015.
@@ -49,8 +52,10 @@ public class HistoryListRecyclerAdapter extends RecyclerView.Adapter<HistoryList
     public void onBindViewHolder(HistoryListRecyclerAdapter.HistoryViewHolder holder, int position) {
         HistoryItem item = items.get(position);
         Date d = new Date(item.getDate());
+        DateFormat dateFormat = new SimpleDateFormat("E dd-MMM-yyyy hh:mm a", Locale.US);
+
         DecimalFormat df = new DecimalFormat("0.00");
-        holder.histDateTime.setText("Cart on " + d.toString());
+        holder.histDateTime.setText("Cart on " + dateFormat.format(d));
         holder.histTotal.setText("Total Spent: " + StaticMethods.getPriceSymbol() + df.format(item.getTotal()));
     }
 
