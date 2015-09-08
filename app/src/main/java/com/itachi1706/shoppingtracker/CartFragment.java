@@ -116,6 +116,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
             JSONCart[] items = CartJsonHelper.getJsonCart(sp);
             if (items.length == 0){
                 Log.i(StaticReferences.TAG, "No existing cart found");
+                noItemInCartDuringCheckoutPrompt();
                 return true;
             }
 
@@ -133,6 +134,8 @@ public class CartFragment extends Fragment implements OnRefreshListener {
                     .setMessage(dialogMessage)
                     .setPositiveButton(android.R.string.ok, null).show();
             onRefresh();
+            if (totalPrice != null)
+                totalPrice.setText("Total: " + StaticMethods.getPriceSymbol() + "0.00");
             return true;
         }
 
@@ -140,6 +143,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     }
 
     private void noItemInCartDuringCheckoutPrompt(){
+        Log.e(StaticReferences.TAG, "No Cart Item and trying to Checkout error");
         new AlertDialog.Builder(getActivity()).setTitle("No Cart Items")
                 .setMessage("You have no items in your cart to checkout")
                 .setPositiveButton(android.R.string.ok, null).show();
@@ -280,6 +284,12 @@ public class CartFragment extends Fragment implements OnRefreshListener {
             for (CartItem item : cartItems) {
                 total += (item.getQty() * item.getBasePrice());
             }
+        }
+
+        //Check if taxed? if so set tax value
+        if (sp.getBoolean("tax", false)){
+            double taxValue = Double.parseDouble(sp.getString("tax_value", "7"));
+            total += total * (taxValue/100);
         }
         return total;
     }

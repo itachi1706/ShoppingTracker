@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
 import com.itachi1706.shoppingtracker.utility.StaticMethods;
+import com.itachi1706.shoppingtracker.utility.ToastHelper;
 
 public class MainPreferences extends AppCompatActivity {
 
@@ -134,10 +135,34 @@ public class MainPreferences extends AppCompatActivity {
                 }
             });
 
+            findPreference("tax_value").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if (newValue.toString().length() > 0 && isIntegerOrDouble(newValue.toString()))
+                        return true;
+                    else {
+                        ToastHelper.createShortToast(getActivity().getApplicationContext(), "A value is required");
+                        return false;
+                    }
+                }
+            });
+
             if (sp.contains("enable_testing_views") && sp.getBoolean("enable_testing_views", false)){
                 addPreferencesFromResource(R.xml.pref_testing);
                 refreshTestingPreference();
             }
+        }
+
+        @SuppressWarnings("ResultOfMethodCallIgnored")
+        public boolean isIntegerOrDouble(String check){
+            try {
+                Double.parseDouble(check);
+            } catch (NumberFormatException e){
+                return false;
+            } catch (NullPointerException e){
+                return false;
+            }
+            return true;
         }
 
         private void refreshTestingPreference(){

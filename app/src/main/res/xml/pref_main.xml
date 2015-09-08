@@ -5,6 +5,10 @@
             android:summary="Uses the barcode scanner from the Google Vision API. (Requires Google Play Services 8.1)" />
         <ListPreference android:title="Currency Symbol" android:key="currency_symbol" android:defaultValue="$"
             android:entries="@array/moneyCodeName" android:entryValues="@array/moneyCode" android:summary="%s" />
+        <CheckBoxPreference android:title="Tax Exclusive" android:key="tax" android:defaultValue="false"
+            android:summary="Check this if tax is applied after subtotal" />
+        <com.itachi1706.shoppingtracker.CustomPreferenceObject.EditTaxPreference android:title="Tax Value" android:key="tax_value"
+            android:dialogTitle="Update your Tax Value (in %)" android:defaultValue="7" android:summary="%s" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced Settings">
