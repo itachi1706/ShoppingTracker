@@ -252,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else {
+            if (resultCode != RESULT_OK) return;
             Log.d(StaticReferences.TAG, "Parsing Legacy Barcode data");
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null){
