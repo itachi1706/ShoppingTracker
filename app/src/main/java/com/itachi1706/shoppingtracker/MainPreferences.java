@@ -206,7 +206,14 @@ public class MainPreferences extends AppCompatActivity {
                     if (sp.contains("enable_testing_views")) isDeveloper = sp.getBoolean("enable_testing_views", false);
 
                     if (isDeveloper){
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), "You are already a developer", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "You are already a developer", Snackbar.LENGTH_SHORT)
+                                .setAction("REVOKE", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        sp.edit().putBoolean("enable_testing_views", false).apply();
+                                        Snackbar.make(getActivity().findViewById(android.R.id.content), "You are no longer a developer, reboot to update", Snackbar.LENGTH_SHORT).show();
+                                    }
+                                }).show();
                         return true;
                     }
 
