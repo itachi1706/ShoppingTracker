@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.itachi1706.shoppingtracker.AsyncTasks.AppUpdateChecker;
+import com.itachi1706.shoppingtracker.Database.ListDB;
 import com.itachi1706.shoppingtracker.utility.StaticMethods;
 import com.itachi1706.shoppingtracker.utility.ToastHelper;
 
@@ -144,6 +145,16 @@ public class MainPreferences extends AppCompatActivity {
                         ToastHelper.createShortToast(getActivity().getApplicationContext(), "A value is required");
                         return false;
                     }
+                }
+            });
+
+            findPreference("remove_db").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    ListDB db = new ListDB(getActivity());
+                    db.dropEverythingAndRebuild();
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Cleared Database of its data", Snackbar.LENGTH_SHORT).show();
+                    return false;
                 }
             });
 

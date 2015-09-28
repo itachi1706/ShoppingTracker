@@ -16,6 +16,7 @@
             android:entries="@array/storedLocation" android:entryValues="@array/storedLocationId" android:key="storageLocation" />
         <Preference android:title="View Cart History JSON" android:key="view_cart_json" />
         <Preference android:title="Remove Cart History" android:key="remove_cart_json" />
+        <Preference android:title="Reset Database" android:key="remove_db" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="App Info">
