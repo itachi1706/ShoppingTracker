@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.itachi1706.shoppingtracker.R;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,7 +53,7 @@ public class DownloadUpdatedApp  extends AsyncTask<String, Float, Boolean> {
             conn.connect();
             Log.d("DL", "Starting Download...");
 
-            filePATH = activity.getApplicationContext().getExternalFilesDir(null) + File.separator + "download" + File.separator;
+            filePATH = StaticMethods.getFilePath(activity.getApplicationContext()) + "download" + File.separator;
             File folder = new File(filePATH);
             if (!folder.exists()) {
                 if (!tryAndCreateFolder(folder)) {

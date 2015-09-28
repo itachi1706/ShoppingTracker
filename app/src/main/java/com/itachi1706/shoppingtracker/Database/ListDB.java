@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
+import com.itachi1706.shoppingtracker.utility.StaticMethods;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ListDB extends SQLiteOpenHelper {
 
     public ListDB(Context context)
     {
-        super(context, context.getExternalFilesDir(null) + File.separator + DB_NAME, null, DATABASE_VERSION);
+        super(context, StaticMethods.getFilePath(context) + DB_NAME, null, DATABASE_VERSION);
     }
 
 
