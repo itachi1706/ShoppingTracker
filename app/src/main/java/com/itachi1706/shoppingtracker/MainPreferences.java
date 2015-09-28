@@ -154,7 +154,15 @@ public class MainPreferences extends AppCompatActivity {
                     ListDB db = new ListDB(getActivity());
                     db.dropEverythingAndRebuild();
                     Snackbar.make(getActivity().findViewById(android.R.id.content), "Cleared Database of its data", Snackbar.LENGTH_SHORT).show();
-                    return false;
+                    return true;
+                }
+            });
+
+            findPreference("storageLocation").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    ToastHelper.createShortToast(getActivity().getApplicationContext(), "Exit and enter the application after changing this option to reflect your new changes");
+                    return true;
                 }
             });
 

@@ -82,6 +82,8 @@ public class StaticMethods {
     public static String debugStorageLocation(Context context){
         File[] externalLocation = context.getExternalFilesDirs(null);
         StringBuilder builder = new StringBuilder();
+        Log.i(StaticReferences.TAG, "Current Storage Location: " + getFilePath(context));
+        builder.append("Current Location: ").append(getFilePath(context)).append("<br /><br />");
         Log.d("DEBUG-STORAGELOCATION", context.getFilesDir().getAbsolutePath());
         builder.append("Internal: ").append(context.getFilesDir().getAbsolutePath()).append("<br />");
         builder.append("External: ").append("<br />");
