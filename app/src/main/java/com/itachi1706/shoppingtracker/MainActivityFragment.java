@@ -94,7 +94,18 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
 
     @Override
     public void onRefresh() {
-        checkAndUpdateAdapter();
+        if (!db.canOpenDB()){
+            new AlertDialog.Builder(getActivity()).setTitle("Error Opening DB")
+                    .setMessage("There is an error accessing the database. Please reboot your phone. If issue persists, contact the developer")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish(); //NOTE: If this fails, kill process instead
+                        }
+                    }).setCancelable(false).show();
+        } else {
+            checkAndUpdateAdapter();
+        }
     }
 
     @Override

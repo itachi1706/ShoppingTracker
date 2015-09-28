@@ -3,14 +3,16 @@ package com.itachi1706.shoppingtracker.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.itachi1706.shoppingtracker.Objects.ListCategory;
 import com.itachi1706.shoppingtracker.Objects.ListItem;
 import com.itachi1706.shoppingtracker.utility.StaticMethods;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -70,6 +72,17 @@ public class ListDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         onCreate(db);
+    }
+
+    public boolean canOpenDB(){
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            return true;
+        } catch (SQLiteCantOpenDatabaseException e){
+            Log.e("DB", "Cannot Open Database");
+            Crashlytics.logException(e);
+            return false;
+        }
     }
 
 
