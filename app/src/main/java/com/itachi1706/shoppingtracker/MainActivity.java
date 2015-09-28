@@ -38,8 +38,6 @@ import com.itachi1706.shoppingtracker.utility.CartJsonHelper;
 import com.itachi1706.shoppingtracker.utility.HistoryObjectHelper;
 import com.itachi1706.shoppingtracker.utility.StaticReferences;
 
-import java.lang.ref.WeakReference;
-
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
@@ -71,36 +69,6 @@ public class MainActivity extends AppCompatActivity {
         this.viewPager = (ViewPager) findViewById(R.id.activity_viewpager);
         setupViewPager(this.viewPager);
 
-        //TODO: Bulk Uncomment this when Design Library is fixed (Refer below for issue)
-        /*this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-                Fragment currentFrag = adapter.getItem(viewPager.getCurrentItem());
-                if (currentFrag instanceof MainActivityFragment){
-                    MainActivityFragment main = (MainActivityFragment) currentFrag;
-                    main.onRefresh();
-                } else if (currentFrag instanceof CartFragment){
-                    CartFragment cart = (CartFragment) currentFrag;
-                    cart.onRefresh();
-                } else if (currentFrag instanceof HistoryFragment){
-                    HistoryFragment history = (HistoryFragment) currentFrag;
-                    history.onRefresh();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-*/
-
         this.tabLayout = (TabLayout) findViewById(R.id.activity_tablayout);
         this.tabLayout.setupWithViewPager(this.viewPager);
 
@@ -121,10 +89,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: Workaround for bug caused by Support Design Library 23. Remove next 3 lines when fix tested
-        //Link to Bug: https://code.google.com/p/android/issues/detail?id=183123
-        this.viewPager.clearOnPageChangeListeners();
-        this.viewPager.addOnPageChangeListener(new TabLayoutOnPageChangeListener(tabLayout));
+        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+                Fragment currentFrag = adapter.getItem(viewPager.getCurrentItem());
+                if (currentFrag instanceof MainActivityFragment) {
+                    MainActivityFragment main = (MainActivityFragment) currentFrag;
+                    StaticReferences.isMainSwiped = true;
+                    main.onSwipeRefresh();
+                } else if (currentFrag instanceof CartFragment) {
+                    CartFragment cart = (CartFragment) currentFrag;
+                    cart.onSwipeRefresh();
+                } else if (currentFrag instanceof HistoryFragment) {
+                    HistoryFragment history = (HistoryFragment) currentFrag;
+                    history.onSwipeRefresh();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         this.fab = (FloatingActionButton) findViewById(R.id.activity_fab);
         this.fab.setOnClickListener(new View.OnClickListener() {
@@ -351,58 +343,5 @@ public class MainActivity extends AppCompatActivity {
     private ListItem getItemByBarcode(String barcode){
         String trimmedBarcode = barcode.trim();
         return db.getItemByBarcode(trimmedBarcode);
-    }
-
-
-    //TODO: Remove this class when support library is fixed
-    private class TabLayoutOnPageChangeListener implements ViewPager.OnPageChangeListener {
-
-        private final WeakReference<TabLayout> mTabLayoutRef;
-        private int mPreviousScrollState;
-        private int mScrollState;
-
-        public TabLayoutOnPageChangeListener(TabLayout tabLayout) {
-            mTabLayoutRef = new WeakReference<>(tabLayout);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-            mPreviousScrollState = mScrollState;
-            mScrollState = state;
-        }
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            final TabLayout tabLayout = mTabLayoutRef.get();
-            if (tabLayout != null) {
-                final boolean updateText = (mScrollState == ViewPager.SCROLL_STATE_DRAGGING)
-                        || (mScrollState == ViewPager.SCROLL_STATE_SETTLING
-                        && mPreviousScrollState == ViewPager.SCROLL_STATE_DRAGGING);
-                tabLayout.setScrollPosition(position, positionOffset, updateText);
-            }
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            final TabLayout tabLayout = mTabLayoutRef.get();
-            if (tabLayout != null) {
-                //noinspection ConstantConditions
-                tabLayout.getTabAt(position).select();
-            }
-
-            ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-            Fragment currentFrag = adapter.getItem(viewPager.getCurrentItem());
-            if (currentFrag instanceof MainActivityFragment){
-                MainActivityFragment main = (MainActivityFragment) currentFrag;
-                StaticReferences.isMainSwiped = true;
-                main.onSwipeRefresh();
-            } else if (currentFrag instanceof CartFragment){
-                CartFragment cart = (CartFragment) currentFrag;
-                cart.onSwipeRefresh();
-            } else if (currentFrag instanceof HistoryFragment){
-                HistoryFragment history = (HistoryFragment) currentFrag;
-                history.onSwipeRefresh();
-            }
-        }
     }
 }
