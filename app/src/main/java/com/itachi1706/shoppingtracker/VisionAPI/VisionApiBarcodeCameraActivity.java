@@ -33,7 +33,7 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     BarcodeTrackerFactory barcodeFactory;
 
-    AsyncTask asyncTask;
+    static AsyncTask asyncTask;
 
     SharedPreferences sp;
 
@@ -78,6 +78,15 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
         super.onDestroy();
         if (mCameraSource != null)
             mCameraSource.release(); //release the resources
+
+        if (asyncTask != null){
+            //Check if there is an Async Task running. If so, cancel it
+            switch (asyncTask.getStatus()){
+                case RUNNING: asyncTask.cancel(true); asyncTask = null; break;
+                case PENDING: asyncTask.cancel(true); asyncTask = null; break;
+                case FINISHED: asyncTask = null; break;
+            }
+        }
     }
 
     @Override
@@ -111,8 +120,17 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
         try {
             mPreview.start(mCameraSource, mGraphicOverlay);
             boolean startAsyncTask = sp.getBoolean("vision_continuous_test", false);
-            if (!startAsyncTask)
+            if (!startAsyncTask) {
+                if (asyncTask != null){
+                    //Check if there is an Async Task running. If so, cancel it
+                    switch (asyncTask.getStatus()){
+                        case RUNNING: asyncTask.cancel(true); asyncTask = null; break;
+                        case PENDING: asyncTask.cancel(true); asyncTask = null; break;
+                        case FINISHED: asyncTask = null; break;
+                    }
+                }
                 asyncTask = new AsyncTaskWaitForBarcode(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         } catch (IOException e){
             mCameraSource.release();
             mCameraSource = null;

@@ -32,6 +32,10 @@ public class AsyncTaskWaitForBarcode extends AsyncTask<Void, Void, Void> {
             return null;
         }
         while (true) {
+            if (isCancelled()) {
+                isInterrupted = true;
+                return null;
+            }
             if (StaticReferences.barcode != null) {
                 break;
             }
