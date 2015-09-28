@@ -1,6 +1,7 @@
 package com.itachi1706.shoppingtracker.utility;
 
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +27,9 @@ public class CartJsonHelper {
     }
 
     public static JSONCart[] getJsonCart(SharedPreferences sp){
+        if (sp == null){
+            sp = PreferenceManager.getDefaultSharedPreferences(StaticReferences.APP_CONTEXT);
+        }
         String json = sp.getString("cart_json", "blanked");
         if (json.equals("blanked")){
             return new JSONCart[0];
