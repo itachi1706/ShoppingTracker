@@ -12,6 +12,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced Settings">
+        <ListPreference android:title="Storage Location" android:summary="%s" android:defaultValue="2"
+            android:entries="@array/storedLocation" android:entryValues="@array/storedLocationId" android:key="storageLocation" />
         <Preference android:title="View Cart History JSON" android:key="view_cart_json" />
         <Preference android:title="Remove Cart History" android:key="remove_cart_json" />
     </PreferenceCategory>

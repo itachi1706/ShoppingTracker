@@ -4,5 +4,6 @@
         <CheckBoxPreference android:title="Vision API Continuous Scanning" android:key="vision_continuous_test" android:defaultValue="false"
             android:summary="Disables the AsyncTask that will kill the barcode scanning process of Vision API after a barcode detection" />
         <Preference android:title="Force a Crash" android:key="force_crash" />
+        <Preference android:title="Check Storage Location" android:key="debug_locate" />
     </PreferenceCategory>
 </PreferenceScreen>

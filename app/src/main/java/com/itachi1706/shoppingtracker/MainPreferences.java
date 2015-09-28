@@ -174,6 +174,25 @@ public class MainPreferences extends AppCompatActivity {
                     }
                 });
             }
+
+            if (findPreference("debug_locate") != null){
+                findPreference("debug_locate").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        if (Build.VERSION.SDK_INT < 19){
+                            //Cannot run
+                            ToastHelper.createShortToast(getActivity().getApplicationContext(), "Android Version incompatible with test");
+                            return true;
+                        }
+                        String magic = StaticMethods.debugStorageLocation(getActivity().getApplicationContext());
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Storage Locations: ")
+                                .setMessage(Html.fromHtml(magic))
+                                .setPositiveButton(android.R.string.ok, null).show();
+                        return true;
+                    }
+                });
+            }
         }
 
         private int clickTimes = 0;

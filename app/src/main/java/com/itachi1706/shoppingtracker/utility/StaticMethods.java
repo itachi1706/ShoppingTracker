@@ -1,8 +1,14 @@
 package com.itachi1706.shoppingtracker.utility;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -45,6 +51,44 @@ public class StaticMethods {
 
     public static String getPriceSymbol(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(StaticReferences.APP_CONTEXT);
-        return sp.getString("currency_symbol","$");
+        return sp.getString("currency_symbol", "$");
+    }
+
+    public static String getFilePath(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(StaticReferences.APP_CONTEXT);
+        int storageLocation = Integer.parseInt(sp.getString("storageLocation", "2"));
+        if (storageLocation == 2){
+            //Internal SD
+            return context.getExternalFilesDir(null) + File.separator;
+        } else if (storageLocation == 3) {
+            //External SD
+
+            //If pre-Kitkat, return internal sd instead
+            if (Build.VERSION.SDK_INT >= 19) {
+                File[] externalLocation = context.getExternalFilesDirs(null);
+                if (externalLocation.length > 1){
+                    return externalLocation[1] + File.separator;
+                }
+                return externalLocation[0] + File.separator;
+            }
+            return context.getExternalFilesDir(null) + File.separator;
+        }
+
+        //Internal
+        return context.getFilesDir() + File.separator;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static String debugStorageLocation(Context context){
+        File[] externalLocation = context.getExternalFilesDirs(null);
+        StringBuilder builder = new StringBuilder();
+        Log.d("DEBUG-STORAGELOCATION", context.getFilesDir().getAbsolutePath());
+        builder.append("Internal: ").append(context.getFilesDir().getAbsolutePath()).append("<br />");
+        builder.append("External: ").append("<br />");
+        for (File file : externalLocation){
+            Log.d("DEBUG-STORAGELOCATION", file.getAbsolutePath());
+            builder.append(file.getAbsolutePath()).append("<br />");
+        }
+        return builder.toString();
     }
 }

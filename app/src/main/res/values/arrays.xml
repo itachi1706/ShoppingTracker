@@ -15,4 +15,16 @@
         <item>¥0.00 - Yen</item>
     </string-array>
 
+    <string-array name="storedLocation">
+        <item>Internal (/data)</item>
+        <item>Internal Storage (/sdcard)</item>
+        <item>External Storage (/extsd)</item>
+    </string-array>
+
+    <string-array name="storedLocationId">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
 </resources>
