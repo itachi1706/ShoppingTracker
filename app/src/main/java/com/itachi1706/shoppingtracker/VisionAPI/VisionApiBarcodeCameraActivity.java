@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -16,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
@@ -109,6 +112,37 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
         barcodeDetector = new BarcodeDetector.Builder(context).build();
         barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay);
         barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
+
+        if (barcodeDetector.isOperational()){
+            // Note: The first time that an app using the barcode or face API is installed on a
+            // device, GMS will download a native libraries to the device in order to do detection.
+            // Usually this completes before the app is run for the first time.  But if that
+            // download has not yet completed, then the above call will not detect any barcodes
+            // and/or faces.
+            //
+            // isOperational() can be used to check if the required native libraries are currently
+            // available.  The detectors will automatically become operational once the library
+            // downloads complete on device.
+            Log.w(TAG, "Detector dependencies are not yet available.");
+
+            // Check for low storage.  If there is low storage, the native library will not be
+            // downloaded, so detection will not become operational.
+            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
+
+            if (hasLowStorage) {
+                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
+                Log.w(TAG, getString(R.string.low_storage_error));
+            }
+
+            //Alert Dialog notifying the user
+            new AlertDialog.Builder(this).setTitle("Dependencies not downloaded")
+                    .setMessage("The Vision API Libraries have yet to be downloaded on the device. " +
+                            "In order for the barcode scanner to work, these libraries have to be downloaded onto your device first. " +
+                            "\n\nPlease refer all bug reports on Vision API to Google if the libraries aren't being downloaded" +
+                            "\n\n(Note: You can temporarily use the Legacy Barcode Scanner to scan while the libraries are " +
+                            "downloaded to your device)").setPositiveButton(android.R.string.ok, null).show();
+        }
 
         mCameraSource = new CameraSource.Builder(context, barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)

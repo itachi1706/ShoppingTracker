@@ -14,4 +14,5 @@
     <string name="action_checkout">Checkout</string>
     <string name="action_delete_all">Delete All</string>
     <string name="title_activity_view_history_item">ViewHistoryItem</string>
+    <string name="low_storage_error">Barcode detector dependencies cannot be downloaded due to low device storage</string>
 </resources>
