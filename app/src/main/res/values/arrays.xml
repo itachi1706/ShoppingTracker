@@ -27,4 +27,28 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="visionDelay">
+        <item>None</item>
+        <item>1.5 seconds (Default)</item>
+        <item>2 seconds</item>
+        <item>2.5 seconds</item>
+        <item>3 seconds</item>
+        <item>3.5 seconds</item>
+        <item>4 seconds</item>
+        <item>4.5 seconds</item>
+        <item>5 seconds</item>
+    </string-array>
+
+    <string-array name="visionDelayTime">
+        <item>0</item>
+        <item>1500</item>
+        <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
+        <item>3500</item>
+        <item>4000</item>
+        <item>4500</item>
+        <item>5000</item>
+    </string-array>
+
 </resources>

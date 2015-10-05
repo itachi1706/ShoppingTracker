@@ -163,7 +163,7 @@ public class VisionApiBarcodeCameraActivity extends AppCompatActivity {
                         case FINISHED: asyncTask = null; break;
                     }
                 }
-                asyncTask = new AsyncTaskWaitForBarcode(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                asyncTask = new AsyncTaskWaitForBarcode(this, Integer.parseInt(sp.getString("vision_sleep", "1500"))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } catch (IOException e){
             mCameraSource.release();

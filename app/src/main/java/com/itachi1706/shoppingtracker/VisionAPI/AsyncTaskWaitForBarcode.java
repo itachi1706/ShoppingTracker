@@ -17,16 +17,18 @@ public class AsyncTaskWaitForBarcode extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
     private boolean isInterrupted = false;
+    private int sleepTime = 1500;
 
-    public AsyncTaskWaitForBarcode(Activity activity){
+    public AsyncTaskWaitForBarcode(Activity activity, int sleepTime){
         this.activity = activity;
+        this.sleepTime = sleepTime;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         StaticReferences.barcode = null;
         try {
-            Thread.sleep(5000);
+            Thread.sleep(sleepTime);
         } catch (InterruptedException e) {
             isInterrupted = true;
             return null;

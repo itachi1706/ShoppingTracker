@@ -9,6 +9,8 @@
             android:summary="Check this if tax is applied after subtotal" />
         <com.itachi1706.shoppingtracker.CustomPreferenceObject.EditTaxPreference android:title="Tax Value" android:key="tax_value"
             android:dialogTitle="Update your Tax Value (in %)" android:defaultValue="7" android:summary="%s" />
+        <ListPreference android:title="Vision API Detection Delay" android:summary="%s" android:key="vision_sleep"
+            android:defaultValue="1500" android:entries="@array/visionDelay" android:entryValues="@array/visionDelayTime" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced Settings">
