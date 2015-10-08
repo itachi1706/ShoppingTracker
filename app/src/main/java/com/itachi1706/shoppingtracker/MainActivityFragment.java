@@ -40,7 +40,12 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements OnRefreshListener {
+public class MainActivityFragment extends BaseFragmentCompat {
+
+    @Override
+    public int getFragmentLayout(){
+        return R.layout.fragment_main_screen;
+    }
 
     public MainActivityFragment() {
     }
@@ -67,7 +72,7 @@ public class MainActivityFragment extends Fragment implements OnRefreshListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_main_screen, container, false);
+        v = inflater.inflate(getFragmentLayout(), container, false);
 
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 

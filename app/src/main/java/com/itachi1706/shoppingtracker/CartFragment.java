@@ -41,7 +41,12 @@ import com.itachi1706.shoppingtracker.utility.StaticReferences;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class CartFragment extends Fragment implements OnRefreshListener {
+public class CartFragment extends BaseFragmentCompat {
+
+    @Override
+    public int getFragmentLayout(){
+        return R.layout.fragment_cart;
+    }
 
     public CartFragment() {
     }
@@ -66,7 +71,7 @@ public class CartFragment extends Fragment implements OnRefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_cart, container, false);
+        v = inflater.inflate(getFragmentLayout(), container, false);
 
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 

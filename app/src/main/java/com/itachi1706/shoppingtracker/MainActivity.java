@@ -99,16 +99,11 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
                 Fragment currentFrag = adapter.getItem(viewPager.getCurrentItem());
-                if (currentFrag instanceof MainActivityFragment) {
-                    MainActivityFragment main = (MainActivityFragment) currentFrag;
-                    StaticReferences.isMainSwiped = true;
-                    main.onSwipeRefresh();
-                } else if (currentFrag instanceof CartFragment) {
-                    CartFragment cart = (CartFragment) currentFrag;
-                    cart.onSwipeRefresh();
-                } else if (currentFrag instanceof HistoryFragment) {
-                    HistoryFragment history = (HistoryFragment) currentFrag;
-                    history.onSwipeRefresh();
+                if (currentFrag instanceof BaseFragmentCompat){
+                    BaseFragmentCompat fragment = (BaseFragmentCompat) currentFrag;
+                    if (fragment instanceof MainActivityFragment)
+                        StaticReferences.isMainSwiped = true;
+                    fragment.onSwipeRefresh();
                 }
             }
 

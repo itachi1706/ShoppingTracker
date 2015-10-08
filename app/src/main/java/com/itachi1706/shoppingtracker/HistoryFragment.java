@@ -35,7 +35,12 @@ import com.itachi1706.shoppingtracker.utility.ToastHelper;
 
 import java.util.List;
 
-public class HistoryFragment extends Fragment implements OnRefreshListener {
+public class HistoryFragment extends BaseFragmentCompat {
+
+    @Override
+    public int getFragmentLayout(){
+        return R.layout.fragment_history;
+    }
 
     public HistoryFragment() { }
 
@@ -61,7 +66,7 @@ public class HistoryFragment extends Fragment implements OnRefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_history, container, false);
+        v = inflater.inflate(getFragmentLayout(), container, false);
 
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
