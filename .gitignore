@@ -39,3 +39,5 @@ proguard/
 
 # API Secret don't commit
 fabric.properties
+
+*.iml
